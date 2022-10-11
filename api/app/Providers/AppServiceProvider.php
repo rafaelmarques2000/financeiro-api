@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Packages\Domain\Auth\Service\AuthService;
+use App\Packages\Domain\Auth\Service\AuthServiceInterface;
 use App\Packages\Domain\User\Repository\UserRepositoryInterface;
 use App\Packages\Domain\User\Service\UserService;
 use App\Packages\Domain\User\Service\UserServiceInterface;
@@ -33,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(UserServiceInterface::class, function($app) {
             return new UserService($app->make(UserRepository::class));
+        });
+
+        $this->app->bind(AuthServiceInterface::class, function($app) {
+            return new AuthService($app->make(UserService::class));
         });
     }
 }

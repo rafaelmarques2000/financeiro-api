@@ -2,7 +2,7 @@
 
 namespace App\Packages\Infra\Mapper;
 
-use App\Packages\Domain\User\Domain\User;
+use App\Packages\Domain\User\Model\User;
 
 class UserMapper
 {

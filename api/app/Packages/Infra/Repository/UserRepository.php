@@ -2,8 +2,9 @@
 
 namespace App\Packages\Infra\Repository;
 
-use App\Packages\Domain\User\Domain\User;
+use App\Packages\Domain\User\Model\User;
 use App\Packages\Domain\User\Repository\UserRepositoryInterface;
+use App\Packages\Infra\Mapper\UserMapper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -12,33 +13,29 @@ class UserRepository implements UserRepositoryInterface
     public function list(): Collection
     {
         return collect(DB::select("SELECT * from users"))->map(function ($user) {
-            return new User(
-                $user->id,
-                $user->username,
-                $user->password,
-                $user->showname,
-                $user->active,
-            );
+            return UserMapper::ObjectToUser($user);
         });
     }
 
-    public function findById(string $id): User
+    public function findById(string $id): ?User
     {
-        // TODO: Implement findById() method.
+        $user = DB::select("SELECT * FROM users WHERE id=? AND active=true",[$id]);
+        if(count($user) == 0) {
+            return null;
+        }
+        return UserMapper::ObjectToUser($user[0]);
     }
 
-    public function save(User $user)
+    public function findByUsernameAndPassword(string $username, string $password): ?User
     {
-        // TODO: Implement save() method.
+        $user = DB::select("SELECT * FROM users WHERE username=? AND password = ? AND active=true",[
+            $username,
+            $password
+        ]);
+        if(count($user) == 0) {
+            return null;
+        }
+        return UserMapper::ObjectToUser($user[0]);
     }
 
-    public function update(User $user)
-    {
-        // TODO: Implement update() method.
-    }
-
-    public function delete(string $id)
-    {
-        // TODO: Implement delete() method.
-    }
 }
