@@ -4,7 +4,7 @@ namespace App\Packages\Infra\Repository;
 
 use App\Packages\Domain\User\Model\User;
 use App\Packages\Domain\User\Repository\UserRepositoryInterface;
-use App\Packages\Infra\Mapper\UserMapper;
+use App\Packages\Infra\Mapper\UserRowMapper;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +13,7 @@ class UserRepository implements UserRepositoryInterface
     public function list(): Collection
     {
         return collect(DB::select("SELECT * from users"))->map(function ($user) {
-            return UserMapper::ObjectToUser($user);
+            return UserRowMapper::ObjectToUser($user);
         });
     }
 
@@ -23,7 +23,7 @@ class UserRepository implements UserRepositoryInterface
         if(count($user) == 0) {
             return null;
         }
-        return UserMapper::ObjectToUser($user[0]);
+        return UserRowMapper::ObjectToUser($user[0]);
     }
 
     public function findByUsernameAndPassword(string $username, string $password): ?User
@@ -35,7 +35,7 @@ class UserRepository implements UserRepositoryInterface
         if(count($user) == 0) {
             return null;
         }
-        return UserMapper::ObjectToUser($user[0]);
+        return UserRowMapper::ObjectToUser($user[0]);
     }
 
 }

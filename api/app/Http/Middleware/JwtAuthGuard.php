@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Api\V1\Responses\ErrorResponse;
-use App\Packages\Domain\User\Exception\UserNotFoundException;
+use App\Packages\Domain\User\Exception\AccountNotFoundException;
 use App\Packages\Domain\User\Service\UserServiceInterface;
 use Closure;
 use Firebase\JWT\JWT;
@@ -38,7 +38,7 @@ class JwtAuthGuard
             $payload = JWT::decode($token[1], new Key(env("JWT_SECRET"), env("JWT_ALGO")));
             $this->userService->findById($payload->sub);
             return $next($request);
-        }catch (UserNotFoundException|UnexpectedValueException $exception) {
+        }catch (AccountNotFoundException|UnexpectedValueException $exception) {
             return $this->unauthorizedResponse();
         }
     }
