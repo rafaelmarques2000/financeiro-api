@@ -13,7 +13,7 @@ ALTER TABLE users add COLUMN deleted_at timestamp;
 CREATE TABLE accounts(
                          id uuid primary key ,
                          description varchar(256) not null ,
-                         create_at timestamp default now(),
+                         created_at timestamp default now(),
                          updated_at timestamp default now(),
                          deleted_at timestamp not null
 );
@@ -23,4 +23,15 @@ CREATE TABLE user_accounts (
                                account_id uuid not null,
                                foreign key (user_id) REFERENCES users (id),
                                foreign key (account_id) REFERENCES accounts (id)
-)
+);
+
+CREATE TABLE account_types (
+                               id uuid primary key,
+                               description varchar(120) not null,
+                               slug_name varchar(100) unique,
+                               created_at timestamp default NOW(),
+                               updated_at timestamp default NOW()
+);
+
+ALTER TABLE accounts add column account_type_id uuid;
+ALTER TABLE accounts add foreign key(account_type_id)  REFERENCES account_types(id);
