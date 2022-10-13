@@ -11,5 +11,5 @@ interface AccountServiceInterface
     public function findById(string $userId,string $accountId) : Account;
     public function create(string $userId, Account $account) : Account;
     public function update(string $userId, Account $account) : Account;
-    public function delete(string $userId, Account $account) : void;
+    public function delete(string $userId, string $accountId) : void;
 }

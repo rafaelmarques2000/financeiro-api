@@ -32,16 +32,29 @@ class AccountService implements AccountServiceInterface
 
     public function create(string $userId, Account $account): Account
     {
-        // TODO: Implement create() method.
+        return $this->accountRepository->create($userId, $account);
     }
 
     public function update(string $userId, Account $account): Account
     {
-        // TODO: Implement update() method.
+        if(!$this->hasAccount($userId, $account)) {
+            throw new AccountNotFoundException("conta não encontrada na base");
+        }
+        return $this->accountRepository->update($userId, $account);
     }
 
-    public function delete(string $userId, Account $account): void
+    public function delete(string $userId, string $accountId): void
     {
-        // TODO: Implement delete() method.
+        $account =  $this->accountRepository->findById($userId, $accountId);
+        if(!$account) {
+            throw new AccountNotFoundException("conta não encontrada na base");
+        }
+        $account->markDeleted();
+        $this->accountRepository->delete($userId, $account);
+    }
+
+    public function hasAccount(string $userId, Account $account): ?Account
+    {
+        return $this->accountRepository->findById($userId, $account->getId());
     }
 }
