@@ -5,6 +5,7 @@ namespace App\Packages\Domain\AccountType\Service;
 use App\Packages\Domain\AccountType\Exception\AccountTypeNotFoundException;
 use App\Packages\Domain\AccountType\Model\AccountType;
 use App\Packages\Domain\AccountType\Repository\AccountTypeRepositoryInterface;
+use Illuminate\Support\Collection;
 
 class AccountTypeService implements AccountTypeServiceInterface
 {
@@ -22,5 +23,10 @@ class AccountTypeService implements AccountTypeServiceInterface
             throw new AccountTypeNotFoundException("Tipo de conta não encontrado");
         }
         return $accountType;
+    }
+
+    public function list(): Collection
+    {
+        return $this->accountTypeRepository->list();
     }
 }
