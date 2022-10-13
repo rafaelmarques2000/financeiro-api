@@ -2,8 +2,11 @@
 
 namespace App\Api\V1\Controllers;
 
+use App\Api\V1\Requests\AuthRequest;
 use App\Api\V1\Responses\AuthResponse;
 use App\Api\V1\Responses\ErrorResponse;
+use App\Api\V1\Responses\ValidationErrorResponse;
+use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\Auth\Service\AuthServiceInterface;
 use App\Packages\General\Exceptions\AuthFailedException;
@@ -22,7 +25,7 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function auth(Request $request) : JsonResponse {
+    public function auth(AuthRequest $request) : JsonResponse {
          try {
             $authUser = $this->authService->authenticateByUserAndPassword(
                 $request->post("username"),
@@ -38,9 +41,9 @@ class AuthController extends Controller
 
              return response()->json(AuthResponse::parseAuthUser($authUser, $token));
          }catch (AuthFailedException $exception) {
-            return response()->json(ErrorResponse::parserError($exception->getMessage()), 400);
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::BAD_REQUEST->value);
          }catch (\Exception $exception) {
-             return response()->json(ErrorResponse::parserError($exception->getMessage()), 500);
+             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::INTERNAL_SERVER_ERROR->value);
          }
     }
 }

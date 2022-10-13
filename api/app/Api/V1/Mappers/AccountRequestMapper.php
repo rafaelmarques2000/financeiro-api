@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Requests;
+namespace App\Api\V1\Mappers;
 
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\AccountType\Model\AccountType;

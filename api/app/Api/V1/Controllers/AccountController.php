@@ -2,10 +2,12 @@
 
 namespace App\Api\V1\Controllers;
 
-use App\Api\V1\Requests\AccountRequestMapper;
+use App\Api\V1\Mappers\AccountRequestMapper;
 use App\Api\V1\Responses\AccountResponse;
 use App\Api\V1\Responses\ErrorResponse;
+use App\Api\V1\Responses\ValidationErrorResponse;
 use App\Api\V1\Responses\SuccessResponse;
+use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\Account\Service\AccountServiceInterface;
 use App\Packages\Domain\AccountType\Service\AccountTypeServiceInterface;
@@ -28,7 +30,8 @@ class AccountController extends Controller
         try {
             return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId)));
         }catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parserError("Falha interna do servidor, tente novamente ou contate o administrador"), 500);
+            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
+                HttpStatus::INTERNAL_SERVER_ERROR->value);
         }
     }
 
@@ -36,10 +39,11 @@ class AccountController extends Controller
         try {
             return response()->json(AccountResponse::parseAccount($this->accountService->findById($userId, $accountId)));
         }catch (NotFoundException $exception) {
-            return response()->json(ErrorResponse::parserError($exception->getMessage()), 404);
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
         }
         catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parserError("Falha interna do servidor, tente novamente ou contate o administrador"), 500);
+            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
+                HttpStatus::INTERNAL_SERVER_ERROR->value);
         }
     }
 
@@ -50,10 +54,11 @@ class AccountController extends Controller
             $accountCreated = $this->accountService->create($userId, $accountModel);
             return response()->json(SuccessResponse::parse("Conta criada com sucesso", $accountCreated));
         }catch (NotFoundException $exception) {
-            return response()->json(ErrorResponse::parserError($exception->getMessage()), 404);
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
         }
         catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parserError("Falha interna do servidor, tente novamente ou contate o administrador"), 500);
+            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
+                HttpStatus::INTERNAL_SERVER_ERROR->value);
         }
     }
 
@@ -64,22 +69,24 @@ class AccountController extends Controller
             $accountUpdated = $this->accountService->update($userId, $accountModel);
             return response()->json(SuccessResponse::parse("Conta atualizada com sucesso", $accountUpdated));
         }catch (NotFoundException $exception) {
-            return response()->json(ErrorResponse::parserError($exception->getMessage()), 404);
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
         }
         catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parserError("Falha interna do servidor, tente novamente ou contate o administrador"), 500);
+            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
+                HttpStatus::INTERNAL_SERVER_ERROR->value);
         }
     }
 
     public function destroy(Request $request, string $userId, string $accountId): JsonResponse {
         try {
             $this->accountService->delete($userId, $accountId);
-            return response()->json("", 204);
+            return response()->json("", HttpStatus::NOT_CONTENT);
         }catch (NotFoundException $exception) {
-            return response()->json(ErrorResponse::parserError($exception->getMessage()), 404);
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
         }
         catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parserError("Falha interna do servidor, tente novamente ou contate o administrador"), 500);
+            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
+                HttpStatus::INTERNAL_SERVER_ERROR->value);
         }
     }
 }

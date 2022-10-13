@@ -4,7 +4,7 @@ namespace App\Api\V1\Responses;
 
 class ErrorResponse
 {
-     public static function parserError(string $message): array {
+     public static function parseError(string $message): array {
          return [
              "message" => $message
          ];
