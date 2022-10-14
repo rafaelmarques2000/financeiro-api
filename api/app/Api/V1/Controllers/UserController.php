@@ -3,12 +3,11 @@
 namespace App\Api\V1\Controllers;
 
 use App\Api\V1\Responses\ErrorResponse;
-use App\Api\V1\Responses\ValidationErrorResponse;
 use App\Api\V1\Responses\UserResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
+use App\Packages\Domain\General\Exceptions\NotFoundException;
 use App\Packages\Domain\User\Service\UserServiceInterface;
-use App\Packages\General\Exceptions\NotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

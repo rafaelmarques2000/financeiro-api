@@ -25,4 +25,14 @@ class AccountTypeRepository implements AccountTypeRepositoryInterface
             return AccountTypeRowMapper::ObjectToAccountType($accountType);
         });
     }
+
+    public function findBySlugname(string $slugname): ?AccountType
+    {
+        // TODO: Implement findBySlugname() method.
+    }
+
+    public function create(AccountType $accountType): AccountType
+    {
+        // TODO: Implement create() method.
+    }
 }

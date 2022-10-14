@@ -9,4 +9,6 @@ interface AccountTypeRepositoryInterface
 {
     public function list() : Collection;
     public function findById(string $id) : ?AccountType;
+    public function findBySlugname(string $slugname) : ?AccountType;
+    public function create(AccountType $accountType) :  AccountType;
 }

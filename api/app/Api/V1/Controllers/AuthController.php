@@ -5,15 +5,13 @@ namespace App\Api\V1\Controllers;
 use App\Api\V1\Requests\AuthRequest;
 use App\Api\V1\Responses\AuthResponse;
 use App\Api\V1\Responses\ErrorResponse;
-use App\Api\V1\Responses\ValidationErrorResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\Auth\Service\AuthServiceInterface;
-use App\Packages\General\Exceptions\AuthFailedException;
+use App\Packages\Domain\General\Exceptions\AuthFailedException;
 use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 
 class AuthController extends Controller
