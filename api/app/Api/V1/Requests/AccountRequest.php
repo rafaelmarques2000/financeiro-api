@@ -2,7 +2,7 @@
 
 namespace App\Api\V1\Requests;
 
-class AuthRequest extends BaseRequest
+class AccountRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,16 +12,16 @@ class AuthRequest extends BaseRequest
     public function rules()
     {
         return [
-            'username' => 'required',
-            'password' => 'required',
+            'description' => 'required',
+            'account_type_id' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            "username.required" => "O campo username é obrigatorio",
-            "password.required" => "O campo password é obrigatorio"
+            "description.required" => "O campo description é obrigatorio",
+            "account_type_id.required" => "O campo account_type_id é obrigatorio"
         ];
     }
 }

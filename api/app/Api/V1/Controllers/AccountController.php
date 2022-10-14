@@ -3,6 +3,7 @@
 namespace App\Api\V1\Controllers;
 
 use App\Api\V1\Mappers\AccountRequestMapper;
+use App\Api\V1\Requests\AccountRequest;
 use App\Api\V1\Responses\AccountResponse;
 use App\Api\V1\Responses\ErrorResponse;
 use App\Api\V1\Responses\ValidationErrorResponse;
@@ -47,7 +48,7 @@ class AccountController extends Controller
         }
     }
 
-    public function store(Request $request, string $userId): JsonResponse {
+    public function store(AccountRequest $request, string $userId): JsonResponse {
         try {
             $accountType = $this->accountTypeService->findById($request->get("account_type_id"));
             $accountModel = AccountRequestMapper::requestToAccount($request->all(), $accountType);
@@ -62,7 +63,7 @@ class AccountController extends Controller
         }
     }
 
-    public function update(Request $request, string $userId, string $accountId): JsonResponse {
+    public function AccountRequest(Request $request, string $userId, string $accountId): JsonResponse {
         try {
             $accountType = $this->accountTypeService->findById($request->get("account_type_id"));
             $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(),$accountId, $accountType);
