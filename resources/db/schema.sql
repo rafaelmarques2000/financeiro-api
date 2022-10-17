@@ -2,7 +2,10 @@ CREATE TABLE users (
                        id uuid primary key ,
                        username varchar(128) not null,
                        password varchar(256) not null,
-                       showName varchar(128) not null,
+                       show_name varchar(128) not null,
+                       created_at timestamp default NOW(),
+                       updated_at timestamp default NOW(),
+                       deleted_at timestamp null,
                        active bool not null
 );
 
@@ -13,9 +16,11 @@ ALTER TABLE users add COLUMN deleted_at timestamp;
 CREATE TABLE accounts(
                          id uuid primary key ,
                          description varchar(256) not null ,
+                         account_type_id uuid not null ,
                          created_at timestamp default now(),
                          updated_at timestamp default now(),
-                         deleted_at timestamp not null
+                         deleted_at timestamp not null,
+                         foreign key(account_type_id)  REFERENCES account_types(id)
 );
 
 CREATE TABLE user_accounts (
