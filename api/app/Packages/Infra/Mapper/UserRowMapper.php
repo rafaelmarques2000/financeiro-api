@@ -11,7 +11,7 @@ class UserRowMapper
             $user->id,
             $user->username,
             $user->password,
-            $user->showname,
+            $user->show_name,
             $user->active,
         );
     }

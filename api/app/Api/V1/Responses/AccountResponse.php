@@ -3,14 +3,19 @@
 namespace App\Api\V1\Responses;
 
 use App\Packages\Domain\Account\Model\Account;
-use Illuminate\Support\Collection;
+use App\Packages\Domain\Account\Model\AccountResult;
 
 class AccountResponse
 {
-    public static function parseAccountList(Collection $accountList): array {
-        return $accountList->map(function (Account $account) {
-            return self::formatAccountResponse($account);
-        })->toArray();
+    public static function parseAccountList(AccountResult $accountResult): array {
+        return [
+            "total_pages" => $accountResult->getTotalPages(),
+            "current_page" => $accountResult->getCurrentPage(),
+            "items_per_page" => $accountResult->getItemPerPage(),
+            "items" => $accountResult->getItems()->map(function (Account $account) {
+                return self::formatAccountResponse($account);
+            })->toArray()
+        ];
     }
 
     public static function parseAccount(Account $account): array {

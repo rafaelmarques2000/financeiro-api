@@ -3,38 +3,68 @@
 namespace App\Packages\Infra\Repository;
 
 use App\Packages\Domain\Account\Model\Account;
+use App\Packages\Domain\Account\Model\AccountResult;
+use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
 use App\Packages\Infra\Mapper\AccountRowMapper;
 use Exception;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class AccountRepository implements AccountRepositoryInterface
+class AccountRepository extends AbstractPaginatedRepository implements AccountRepositoryInterface
 {
     const SELECT_ACCOUNT_QUERY = "SELECT a.id,
-                    a.description,
-                    a.created_at,
-                    a.updated_at,
-                    t.id as account_type_id,
-                    t.description as account_type_description,
-                    t.slug_name as account_type_slug_name
-                    from accounts a
-                    JOIN user_accounts uc
-                    ON a.id = uc.account_id
-                    JOIN users u on uc.user_id = u.id
-                    JOIN account_types t on a.account_type_id = t.id
+                        a.description,
+                        a.created_at,
+                        a.updated_at,
+                        t.id as account_type_id,
+                        t.description as account_type_description,
+                        t.slug_name as account_type_slug_name
+                        from accounts a
+                        JOIN user_accounts uc
+                        ON a.id = uc.account_id
+                        JOIN users u on uc.user_id = u.id
+                        JOIN account_types t on a.account_type_id = t.id
+                        WHERE u.id = ? AND a.deleted_at is null
                     ";
 
-    public function list(string $userId): Collection
+    protected string $countQuery = "SELECT
+                        COUNT(a.id) as total
+                        from accounts a
+                        JOIN user_accounts uc
+                        ON a.id = uc.account_id
+                        JOIN users u on uc.user_id = u.id
+                        JOIN account_types t on a.account_type_id = t.id
+                        WHERE u.id = ? AND a.deleted_at is null
+                    ";
+
+    public function list(string $userId, AccountSearch $accountSearch): AccountResult
     {
-        return collect(DB::select(self::SELECT_ACCOUNT_QUERY." WHERE u.id = ? AND a.deleted_at is null",[$userId]))->map(function ($account) {
-            return AccountRowMapper::ObjectToAccount($account);
-        });
+         $query = self::SELECT_ACCOUNT_QUERY;
+         if($accountSearch->getDescription() != null) {
+             $query.="AND a.description LIKE '%".$accountSearch->getDescription()."%'";
+             $this->countQuery.="AND a.description LIKE '%".$accountSearch->getDescription()."%'";
+         }
+
+         $totalLimitRange = $this->calculateLimitOffset($accountSearch->getLimit(), $accountSearch->getPage());
+         $limit = $accountSearch->getLimit();
+
+         $query.="LIMIT ".$limit." OFFSET ".$totalLimitRange;
+
+         $result = collect(DB::select($query,[$userId]))->map(function ($account) {
+             return AccountRowMapper::ObjectToAccount($account);
+         });
+
+         return new AccountResult(
+             $this->calculateTotalPages($userId,$accountSearch->getLimit()),
+             $accountSearch->getPage(),
+             $accountSearch->getLimit(),
+             $result
+         );
     }
 
     public function findById(string $userId, string $id): ?Account
     {
-        $account = DB::select(self::SELECT_ACCOUNT_QUERY. "  WHERE u.id = ? AND a.id = ? AND a.deleted_at is null",[$userId, $id]);
+        $account = DB::select(self::SELECT_ACCOUNT_QUERY. "AND a.id = ?",[$userId, $id]);
         if(count($account) == 0) {
             return null;
         }

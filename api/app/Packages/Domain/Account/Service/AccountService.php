@@ -4,6 +4,8 @@ namespace App\Packages\Domain\Account\Service;
 
 use App\Packages\Domain\Account\Exception\AccountNotFoundException;
 use App\Packages\Domain\Account\Model\Account;
+use App\Packages\Domain\Account\Model\AccountResult;
+use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 
@@ -16,9 +18,9 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function list(string $userId): Collection
+    public function list(string $userId, AccountSearch $accountSearch): AccountResult
     {
-        return $this->accountRepository->list($userId);
+        return $this->accountRepository->list($userId, $accountSearch);
     }
 
     public function findById(string $userId, string $accountId): Account

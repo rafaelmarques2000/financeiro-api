@@ -9,6 +9,7 @@ use App\Api\V1\Responses\ErrorResponse;
 use App\Api\V1\Responses\SuccessResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
+use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Service\AccountServiceInterface;
 use App\Packages\Domain\AccountType\Service\AccountTypeServiceInterface;
 use App\Packages\Domain\General\Exceptions\NotFoundException;
@@ -28,7 +29,12 @@ class AccountController extends Controller
 
     public function index(Request $request, string $userId) : JsonResponse{
         try {
-            return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId)));
+            $accountSearch = new AccountSearch(
+                $request->query("description"),
+                $request->query("page"),
+                $request->query("limit"),
+            );
+            return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId,$accountSearch)));
         }catch (\Exception $exception) {
             return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
                 HttpStatus::INTERNAL_SERVER_ERROR->value);

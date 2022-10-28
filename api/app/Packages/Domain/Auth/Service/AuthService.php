@@ -22,6 +22,6 @@ class AuthService implements AuthServiceInterface
          if(!$user) {
              throw new InvalidUserAndPasswordException("Credencias invalidas");
          }
-         return new AuthUser($user->getId());
+         return new AuthUser($user->getId(), $user->getShowName());
     }
 }
