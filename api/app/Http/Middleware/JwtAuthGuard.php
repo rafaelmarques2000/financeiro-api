@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Api\V1\Responses\ValidationErrorResponse;
-use App\Packages\Domain\User\Exception\AccountNotFoundException;
+use App\Api\V1\Responses\ErrorResponse;
+use App\Packages\Domain\Account\Exception\AccountNotFoundException;
 use App\Packages\Domain\User\Service\UserServiceInterface;
 use Closure;
 use Firebase\JWT\JWT;
@@ -45,6 +45,6 @@ class JwtAuthGuard
 
     public function unauthorizedResponse(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(ValidationErrorResponse::parseError("Não autorizado"), 401);
+        return response()->json(ErrorResponse::parseError("Não autorizado"), 401);
     }
 }

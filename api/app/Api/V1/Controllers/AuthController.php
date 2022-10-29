@@ -11,7 +11,10 @@ use App\Packages\Domain\Auth\Service\AuthServiceInterface;
 use App\Packages\Domain\General\Exceptions\AuthFailedException;
 use Carbon\Carbon;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use UnexpectedValueException;
 
 
 class AuthController extends Controller
@@ -44,4 +47,14 @@ class AuthController extends Controller
              return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::INTERNAL_SERVER_ERROR->value);
          }
     }
+
+    public function checkJWTToken(Request $request): JsonResponse {
+        try{
+            JWT::decode($request->post("token"), new Key(env("JWT_SECRET"), env("JWT_ALGO")));
+            return response()->json([], HttpStatus::NOT_CONTENT->value);
+        }catch (UnexpectedValueException $exception) {
+            return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::BAD_REQUEST->value);
+        }
+    }
+
 }

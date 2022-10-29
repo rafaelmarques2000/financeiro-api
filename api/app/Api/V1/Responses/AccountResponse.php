@@ -4,6 +4,7 @@ namespace App\Api\V1\Responses;
 
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
+use Illuminate\Support\Carbon;
 
 class AccountResponse
 {
@@ -33,8 +34,8 @@ class AccountResponse
                 "description" => $accountType->getDescription(),
                 "slug_name" => $accountType->getSlugName(),
             ],
-            "created_at" => $account->getCreatedAt(),
-            "updated_at" => $account->getUpdatedAt()
+            "created_at" => Carbon::parse($account->getCreatedAt())->format("d/m/Y H:m"),
+            "updated_at" => Carbon::parse($account->getUpdatedAt())->format("d/m/Y H:m")
         ];
     }
 }
