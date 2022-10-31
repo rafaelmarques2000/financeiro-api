@@ -70,7 +70,7 @@ class AccountController extends Controller
 
     public function update(Request $request, string $userId, string $accountId): JsonResponse {
         try {
-            $accountType = $this->accountTypeService->findById($accountId);
+            $accountType = $this->accountTypeService->findById($request->post("account_type_id"));
             $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(),$accountId, $accountType);
             $accountUpdated = $this->accountService->update($userId, $accountModel);
             return response()->json(SuccessResponse::parse("Conta atualizada com sucesso", $accountUpdated));
