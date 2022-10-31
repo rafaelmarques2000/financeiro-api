@@ -11,6 +11,7 @@ class AccountResponse
     public static function parseAccountList(AccountResult $accountResult): array {
         return [
             "total_pages" => $accountResult->getTotalPages(),
+            "total_rows" => $accountResult->getTotalRows(),
             "current_page" => $accountResult->getCurrentPage(),
             "items_per_page" => $accountResult->getItemPerPage(),
             "items" => $accountResult->getItems()->map(function (Account $account) {

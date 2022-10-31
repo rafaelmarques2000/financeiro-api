@@ -56,6 +56,7 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
 
          return new AccountResult(
              $this->calculateTotalPages($userId,$accountSearch->getLimit()),
+             $this->calculateTotalRows($userId),
              $accountSearch->getPage(),
              $accountSearch->getLimit(),
              $result

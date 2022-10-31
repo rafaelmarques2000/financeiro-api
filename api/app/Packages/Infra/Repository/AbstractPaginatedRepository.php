@@ -16,4 +16,9 @@ abstract class AbstractPaginatedRepository
         $entities = DB::selectOne($this->countQuery, [$artifactId]);
         return ceil($entities->total / $limit);
     }
+
+    public function calculateTotalRows(string $artifactId) : int {
+        $entities = DB::selectOne($this->countQuery, [$artifactId]);
+        return $entities->total;
+    }
 }

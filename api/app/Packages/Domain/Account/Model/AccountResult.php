@@ -7,21 +7,29 @@ use Illuminate\Support\Collection;
 class AccountResult
 {
     private int $totalPages;
+    private int $totalRows;
     private int $currentPage;
     private int $itemPerPage;
     private Collection $items;
 
-    public function __construct(int $totalPages, int $currentPage, int $itemPerPage, Collection $items)
+    public function __construct(int $totalPages, int $totalRows, int $currentPage, int $itemPerPage, Collection $items)
     {
         $this->totalPages = $totalPages;
+        $this->totalRows = $totalRows;
         $this->currentPage = $currentPage;
         $this->itemPerPage = $itemPerPage;
         $this->items = $items;
     }
 
+
     public function getTotalPages(): int
     {
         return $this->totalPages;
+    }
+
+    public function getTotalRows(): int
+    {
+        return $this->totalRows;
     }
 
     public function getCurrentPage(): int
@@ -38,4 +46,6 @@ class AccountResult
     {
         return $this->items;
     }
+
+
 }

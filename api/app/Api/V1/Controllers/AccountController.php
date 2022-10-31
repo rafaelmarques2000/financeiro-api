@@ -68,9 +68,9 @@ class AccountController extends Controller
         }
     }
 
-    public function AccountRequest(Request $request, string $userId, string $accountId): JsonResponse {
+    public function update(Request $request, string $userId, string $accountId): JsonResponse {
         try {
-            $accountType = $this->accountTypeService->findById($request->get("account_type_id"));
+            $accountType = $this->accountTypeService->findById($accountId);
             $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(),$accountId, $accountType);
             $accountUpdated = $this->accountService->update($userId, $accountModel);
             return response()->json(SuccessResponse::parse("Conta atualizada com sucesso", $accountUpdated));
@@ -86,7 +86,7 @@ class AccountController extends Controller
     public function destroy(Request $request, string $userId, string $accountId): JsonResponse {
         try {
             $this->accountService->delete($userId, $accountId);
-            return response()->json("", HttpStatus::NOT_CONTENT);
+            return response()->json("", HttpStatus::NOT_CONTENT->value);
         }catch (NotFoundException $exception) {
             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
         }
