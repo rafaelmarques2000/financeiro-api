@@ -9,17 +9,21 @@ use Illuminate\Support\Str;
 
 class AccountRequestMapper
 {
-     public static function requestToAccount(array $body, AccountType $accountType) : Account {
-         return new Account(
+    public static function requestToAccount(array $body, AccountType $accountType): Account
+    {
+        return new Account(
             Str::uuid()->toString(),
             $body['description'],
             $accountType
-         );
-     }
+        );
+    }
 
-     public static function requestToAccountUpdated(array $body,
-                                                    string $accountId,
-                                                    AccountType $accountType) : Account {
+    public static function requestToAccountUpdated(
+        array $body,
+        string $accountId,
+        AccountType $accountType
+    ): Account
+    {
         return new Account(
             $accountId,
             $body['description'],

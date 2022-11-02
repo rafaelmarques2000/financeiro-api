@@ -7,12 +7,15 @@ use App\Packages\Domain\AccountType\Model\AccountType;
 
 class AccountRowMapper
 {
-    public static function ObjectToAccount(object $account): Account {
+    public static function ObjectToAccount(object $account): Account
+    {
         $accountType = new AccountType(
             $account->account_type_id,
             $account->account_type_description,
             $account->account_type_slug_name,
+            $account->account_type_color
         );
+
         return new Account(
             $account->id,
             $account->description,

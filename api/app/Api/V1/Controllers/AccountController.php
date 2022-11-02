@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 class AccountController extends Controller
 {
     private AccountServiceInterface $accountService;
+
     private AccountTypeServiceInterface $accountTypeService;
 
     public function __construct(AccountServiceInterface $accountService, AccountTypeServiceInterface $accountTypeService)
@@ -27,72 +28,87 @@ class AccountController extends Controller
         $this->accountTypeService = $accountTypeService;
     }
 
-    public function index(Request $request, string $userId) : JsonResponse{
+    public function index(Request $request, string $userId): JsonResponse
+    {
         try {
             $accountSearch = new AccountSearch(
-                $request->query("description"),
-                $request->query("page"),
-                $request->query("limit"),
+                $request->query('description'),
+                $request->query('page'),
+                $request->query('limit'),
             );
-            return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId,$accountSearch)));
-        }catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+
+            return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId, $accountSearch)));
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 
-    public function show(Request $request, string $userId, string $accountId) : JsonResponse{
+    public function show(Request $request, string $userId, string $accountId): JsonResponse
+    {
         try {
             return response()->json(AccountResponse::parseAccount($this->accountService->findById($userId, $accountId)));
-        }catch (NotFoundException $exception) {
+        } catch (NotFoundException $exception) {
             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
-        }
-        catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 
-    public function store(AccountRequest $request, string $userId): JsonResponse {
+    public function store(AccountRequest $request, string $userId): JsonResponse
+    {
         try {
-            $accountType = $this->accountTypeService->findById($request->get("account_type_id"));
+            $accountType = $this->accountTypeService->findById($request->get('account_type_id'));
             $accountModel = AccountRequestMapper::requestToAccount($request->all(), $accountType);
             $accountCreated = $this->accountService->create($userId, $accountModel);
-            return response()->json(SuccessResponse::parse("Conta criada com sucesso", $accountCreated));
-        }catch (NotFoundException $exception) {
+
+            return response()->json(SuccessResponse::parse('Conta criada com sucesso', $accountCreated));
+        } catch (NotFoundException $exception) {
             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
-        }
-        catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 
-    public function update(Request $request, string $userId, string $accountId): JsonResponse {
+    public function update(Request $request, string $userId, string $accountId): JsonResponse
+    {
         try {
-            $accountType = $this->accountTypeService->findById($request->post("account_type_id"));
-            $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(),$accountId, $accountType);
+            $accountType = $this->accountTypeService->findById($request->post('account_type_id'));
+            $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(), $accountId, $accountType);
             $accountUpdated = $this->accountService->update($userId, $accountModel);
-            return response()->json(SuccessResponse::parse("Conta atualizada com sucesso", $accountUpdated));
-        }catch (NotFoundException $exception) {
+
+            return response()->json(SuccessResponse::parse('Conta atualizada com sucesso', $accountUpdated));
+        } catch (NotFoundException $exception) {
             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
-        }
-        catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 
-    public function destroy(Request $request, string $userId, string $accountId): JsonResponse {
+    public function destroy(Request $request, string $userId, string $accountId): JsonResponse
+    {
         try {
             $this->accountService->delete($userId, $accountId);
-            return response()->json("", HttpStatus::NOT_CONTENT->value);
-        }catch (NotFoundException $exception) {
+
+            return response()->json('', HttpStatus::NOT_CONTENT->value);
+        } catch (NotFoundException $exception) {
             return response()->json(ErrorResponse::parseError($exception->getMessage()), HttpStatus::NOT_FOUND->value);
-        }
-        catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 }

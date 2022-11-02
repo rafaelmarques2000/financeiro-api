@@ -37,31 +37,31 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->bind(UserRepositoryInterface::class, function(){
-             return new UserRepository();
+        $this->app->bind(UserRepositoryInterface::class, function () {
+            return new UserRepository();
         });
 
-        $this->app->bind(UserServiceInterface::class, function($app) {
+        $this->app->bind(UserServiceInterface::class, function ($app) {
             return new UserService($app->make(UserRepository::class));
         });
 
-        $this->app->bind(AuthServiceInterface::class, function($app) {
+        $this->app->bind(AuthServiceInterface::class, function ($app) {
             return new AuthService($app->make(UserService::class));
         });
 
-        $this->app->bind(AccountRepositoryInterface::class, function() {
+        $this->app->bind(AccountRepositoryInterface::class, function () {
             return new AccountRepository();
         });
 
-        $this->app->bind(AccountServiceInterface::class, function($app) {
+        $this->app->bind(AccountServiceInterface::class, function ($app) {
             return new AccountService($app->make(AccountRepository::class));
         });
 
-        $this->app->bind(AccountTypeRepositoryInterface::class, function() {
+        $this->app->bind(AccountTypeRepositoryInterface::class, function () {
             return new AccountTypeRepository();
         });
 
-        $this->app->bind(AccountTypeServiceInterface::class, function($app) {
+        $this->app->bind(AccountTypeServiceInterface::class, function ($app) {
             return new AccountTypeService($app->make(AccountTypeRepository::class));
         });
     }

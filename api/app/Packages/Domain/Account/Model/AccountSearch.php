@@ -5,7 +5,9 @@ namespace App\Packages\Domain\Account\Model;
 class AccountSearch
 {
     private ?string $description;
+
     private int $page;
+
     private int $limit;
 
     public function __construct(?string $description, int $page, int $limit)
@@ -29,5 +31,4 @@ class AccountSearch
     {
         return $this->limit;
     }
-
 }

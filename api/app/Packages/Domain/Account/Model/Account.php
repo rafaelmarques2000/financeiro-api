@@ -8,10 +8,15 @@ use Carbon\Carbon;
 class Account
 {
     private string $id;
+
     private string $description;
+
     private ?string $createdAt;
+
     private ?string $updatedAt;
+
     private ?string $deletedAt;
+
     private AccountType $accountType;
 
     public function __construct(
@@ -21,8 +26,7 @@ class Account
         ?string $createdAt = null,
         ?string $updatedAt = null,
         ?string $deletedAt = null,
-    )
-    {
+    ) {
         $this->id = $id;
         $this->description = $description;
         $this->createdAt = $createdAt;
@@ -30,7 +34,6 @@ class Account
         $this->deletedAt = $deletedAt;
         $this->accountType = $accountType;
     }
-
 
     public function getId(): string
     {
@@ -62,8 +65,8 @@ class Account
         return $this->accountType;
     }
 
-    public function markDeleted() {
+    public function markDeleted()
+    {
         $this->deletedAt = Carbon::now()->toDateTimeString();
     }
-
 }

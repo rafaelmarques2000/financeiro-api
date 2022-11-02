@@ -10,14 +10,15 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class BaseRequest extends FormRequest
 {
-    public function authorize() {
-         return true;
+    public function authorize()
+    {
+        return true;
     }
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json(
-            ValidationErrorResponse::parse("Falha ao validar dados", $validator->errors()->getMessages()),
+            ValidationErrorResponse::parse('Falha ao validar dados', $validator->errors()->getMessages()),
             HttpStatus::BAD_REQUEST->value
         ));
     }

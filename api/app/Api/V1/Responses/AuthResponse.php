@@ -8,10 +8,10 @@ class AuthResponse
 {
     public static function parseAuthUser(AuthUser $authUser, string $token): array
     {
-         return [
-             "user_id" => $authUser->getId(),
-             "show_name" => $authUser->getShowName(),
-             "token" =>$token
-         ];
+        return [
+            'user_id' => $authUser->getId(),
+            'show_name' => $authUser->getShowName(),
+            'token' => $token,
+        ];
     }
 }

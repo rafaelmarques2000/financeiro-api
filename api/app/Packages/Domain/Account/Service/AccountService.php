@@ -7,7 +7,6 @@ use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
-use Illuminate\Support\Collection;
 
 class AccountService implements AccountServiceInterface
 {
@@ -26,9 +25,10 @@ class AccountService implements AccountServiceInterface
     public function findById(string $userId, string $accountId): Account
     {
         $account = $this->accountRepository->findById($userId, $accountId);
-        if(!$account) {
-            throw new AccountNotFoundException("conta não encontrada na base");
+        if (! $account) {
+            throw new AccountNotFoundException('conta não encontrada na base');
         }
+
         return $account;
     }
 
@@ -39,17 +39,18 @@ class AccountService implements AccountServiceInterface
 
     public function update(string $userId, Account $account): Account
     {
-        if(!$this->hasAccount($userId, $account)) {
-            throw new AccountNotFoundException("conta não encontrada na base");
+        if (! $this->hasAccount($userId, $account)) {
+            throw new AccountNotFoundException('conta não encontrada na base');
         }
+
         return $this->accountRepository->update($userId, $account);
     }
 
     public function delete(string $userId, string $accountId): void
     {
-        $account =  $this->accountRepository->findById($userId, $accountId);
-        if(!$account) {
-            throw new AccountNotFoundException("conta não encontrada na base");
+        $account = $this->accountRepository->findById($userId, $accountId);
+        if (! $account) {
+            throw new AccountNotFoundException('conta não encontrada na base');
         }
         $account->markDeleted();
         $this->accountRepository->delete($userId, $account);

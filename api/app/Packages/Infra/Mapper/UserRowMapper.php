@@ -6,7 +6,8 @@ use App\Packages\Domain\User\Model\User;
 
 class UserRowMapper
 {
-    public static function ObjectToUser(object $user): User {
+    public static function ObjectToUser(object $user): User
+    {
         return new User(
             $user->id,
             $user->username,

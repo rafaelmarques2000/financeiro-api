@@ -8,35 +8,39 @@ use Illuminate\Support\Carbon;
 
 class AccountResponse
 {
-    public static function parseAccountList(AccountResult $accountResult): array {
+    public static function parseAccountList(AccountResult $accountResult): array
+    {
         return [
-            "total_pages" => $accountResult->getTotalPages(),
-            "total_rows" => $accountResult->getTotalRows(),
-            "current_page" => $accountResult->getCurrentPage(),
-            "items_per_page" => $accountResult->getItemPerPage(),
-            "items" => $accountResult->getItems()->map(function (Account $account) {
+            'total_pages' => $accountResult->getTotalPages(),
+            'total_rows' => $accountResult->getTotalRows(),
+            'current_page' => $accountResult->getCurrentPage(),
+            'items_per_page' => $accountResult->getItemPerPage(),
+            'items' => $accountResult->getItems()->map(function (Account $account) {
                 return self::formatAccountResponse($account);
-            })->toArray()
+            })->toArray(),
         ];
     }
 
-    public static function parseAccount(Account $account): array {
+    public static function parseAccount(Account $account): array
+    {
         return self::formatAccountResponse($account);
     }
 
     public static function formatAccountResponse(Account $account): array
     {
         $accountType = $account->getAccountType();
+
         return [
-            "id" => $account->getId(),
-            "description" => $account->getDescription(),
-            "accountType" => [
-                "id" => $accountType->getId(),
-                "description" => $accountType->getDescription(),
-                "slug_name" => $accountType->getSlugName(),
+            'id' => $account->getId(),
+            'description' => $account->getDescription(),
+            'accountType' => [
+                'id' => $accountType->getId(),
+                'description' => $accountType->getDescription(),
+                'slug_name' => $accountType->getSlugName(),
+                'color' => $accountType->getColor(),
             ],
-            "created_at" => Carbon::parse($account->getCreatedAt())->format("d/m/Y H:m"),
-            "updated_at" => Carbon::parse($account->getUpdatedAt())->format("d/m/Y H:m")
+            'created_at' => Carbon::parse($account->getCreatedAt())->format('d/m/Y H:m'),
+            'updated_at' => Carbon::parse($account->getUpdatedAt())->format('d/m/Y H:m'),
         ];
     }
 }

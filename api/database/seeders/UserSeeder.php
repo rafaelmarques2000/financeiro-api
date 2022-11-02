@@ -11,19 +11,19 @@ class UserSeeder extends Seeder
     public function run()
     {
         $accountTypes = collect([
-                 [
-                     'id' => Str::uuid()->toString(),
-                     'username' => 'admin',
-                     'password' => '123456',
-                     'show_name' => 'Admin',
-                     'active' => true
-                 ],
-            ]);
+            [
+                'id' => Str::uuid()->toString(),
+                'username' => 'admin',
+                'password' => '123456',
+                'show_name' => 'Admin',
+                'active' => true,
+            ],
+        ]);
 
         $accountTypes->each(function (array $item) {
-            $dbUser = DB::select("SELECT * FROM users WHERE username = ?", [$item['username']]);
-            if(empty($dbUser)) {
-                DB::insert("INSERT INTO users (id, username, password, show_name, active) VALUES(?, ?, ?, ?, ?)", [
+            $dbUser = DB::select('SELECT * FROM users WHERE username = ?', [$item['username']]);
+            if (empty($dbUser)) {
+                DB::insert('INSERT INTO users (id, username, password, show_name, active) VALUES(?, ?, ?, ?, ?)', [
                     $item['id'],
                     $item['username'],
                     $item['password'],

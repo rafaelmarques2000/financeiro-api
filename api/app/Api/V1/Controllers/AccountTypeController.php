@@ -2,10 +2,8 @@
 
 namespace App\Api\V1\Controllers;
 
-use App\Api\V1\Responses\AccountResponse;
 use App\Api\V1\Responses\AccountTypeResponse;
 use App\Api\V1\Responses\ErrorResponse;
-use App\Api\V1\Responses\ValidationErrorResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\Account\Service\AccountServiceInterface;
@@ -22,12 +20,15 @@ class AccountTypeController extends Controller
         $this->accountTypeService = $accountTypeService;
     }
 
-    public function index(Request $request): JsonResponse {
+    public function index(Request $request): JsonResponse
+    {
         try {
             return response()->json(AccountTypeResponse::parseAccountTypeList($this->accountTypeService->list()));
-        }catch (\Exception $exception) {
-            return response()->json(ErrorResponse::parseError("Falha interna do servidor, tente novamente ou contate o administrador"),
-                HttpStatus::INTERNAL_SERVER_ERROR->value);
+        } catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
         }
     }
 }

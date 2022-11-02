@@ -1,14 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     public function up()
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE users (
                        id uuid primary key ,
                        username varchar(128) not null,
@@ -19,7 +18,7 @@ return new class extends Migration
                        deleted_at timestamp null,
                        active bool not null
             );
-        ");
+        ');
     }
 
     public function down()

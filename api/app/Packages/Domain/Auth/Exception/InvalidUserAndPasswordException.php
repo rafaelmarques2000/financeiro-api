@@ -6,5 +6,4 @@ use App\Packages\Domain\General\Exceptions\AuthFailedException;
 
 class InvalidUserAndPasswordException extends AuthFailedException
 {
-
 }

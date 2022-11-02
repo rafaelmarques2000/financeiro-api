@@ -20,8 +20,8 @@ class AuthRequest extends BaseRequest
     public function messages()
     {
         return [
-            "username.required" => "O campo username é obrigatorio",
-            "password.required" => "O campo password é obrigatorio"
+            'username.required' => 'O campo username é obrigatorio',
+            'password.required' => 'O campo password é obrigatorio',
         ];
     }
 }

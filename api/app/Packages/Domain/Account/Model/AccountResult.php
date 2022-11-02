@@ -7,9 +7,13 @@ use Illuminate\Support\Collection;
 class AccountResult
 {
     private int $totalPages;
+
     private int $totalRows;
+
     private int $currentPage;
+
     private int $itemPerPage;
+
     private Collection $items;
 
     public function __construct(int $totalPages, int $totalRows, int $currentPage, int $itemPerPage, Collection $items)
@@ -20,7 +24,6 @@ class AccountResult
         $this->itemPerPage = $itemPerPage;
         $this->items = $items;
     }
-
 
     public function getTotalPages(): int
     {
@@ -46,6 +49,4 @@ class AccountResult
     {
         return $this->items;
     }
-
-
 }

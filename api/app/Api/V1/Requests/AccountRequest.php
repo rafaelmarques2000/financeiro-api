@@ -20,8 +20,8 @@ class AccountRequest extends BaseRequest
     public function messages()
     {
         return [
-            "description.required" => "O campo description é obrigatorio",
-            "account_type_id.required" => "O campo account_type_id é obrigatorio"
+            'description.required' => 'O campo description é obrigatorio',
+            'account_type_id.required' => 'O campo account_type_id é obrigatorio',
         ];
     }
 }

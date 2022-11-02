@@ -13,7 +13,7 @@ use UnexpectedValueException;
 
 class JwtAuthGuard
 {
-    private string $AUTORIZATION_HEADER = "authorization";
+    private string $AUTORIZATION_HEADER = 'authorization';
 
     private UserServiceInterface $userService;
 
@@ -24,27 +24,28 @@ class JwtAuthGuard
 
     public function handle(Request $request, Closure $next)
     {
-        if(!$request->headers->has($this->AUTORIZATION_HEADER)) {
+        if (! $request->headers->has($this->AUTORIZATION_HEADER)) {
             return $this->unauthorizedResponse();
         }
 
-        $token = explode(" ", $request->headers->get($this->AUTORIZATION_HEADER));
+        $token = explode(' ', $request->headers->get($this->AUTORIZATION_HEADER));
 
-        if(count($token) < 2) {
+        if (count($token) < 2) {
             return $this->unauthorizedResponse();
         }
 
         try {
-            $payload = JWT::decode($token[1], new Key(env("JWT_SECRET"), env("JWT_ALGO")));
+            $payload = JWT::decode($token[1], new Key(env('JWT_SECRET'), env('JWT_ALGO')));
             $this->userService->findById($payload->sub);
+
             return $next($request);
-        }catch (AccountNotFoundException|UnexpectedValueException $exception) {
+        } catch (AccountNotFoundException|UnexpectedValueException $exception) {
             return $this->unauthorizedResponse();
         }
     }
 
     public function unauthorizedResponse(): \Illuminate\Http\JsonResponse
     {
-        return response()->json(ErrorResponse::parseError("Não autorizado"), 401);
+        return response()->json(ErrorResponse::parseError('Não autorizado'), 401);
     }
 }

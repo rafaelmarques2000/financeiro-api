@@ -17,11 +17,12 @@ class AuthService implements AuthServiceInterface
 
     public function authenticateByUserAndPassword(string $username, string $password): AuthUser
     {
-         $user = $this->userService->findByUsernameAndPassword($username, $password);
+        $user = $this->userService->findByUsernameAndPassword($username, $password);
 
-         if(!$user) {
-             throw new InvalidUserAndPasswordException("Credencias invalidas");
-         }
-         return new AuthUser($user->getId(), $user->getShowName());
+        if (! $user) {
+            throw new InvalidUserAndPasswordException('Credencias invalidas');
+        }
+
+        return new AuthUser($user->getId(), $user->getShowName());
     }
 }

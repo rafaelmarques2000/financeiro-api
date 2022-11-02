@@ -12,27 +12,18 @@ class AccountTypeRepository implements AccountTypeRepositoryInterface
 {
     public function findById(string $id): ?AccountType
     {
-        $accountType = DB::select("SELECT * FROM account_types WHERE id=?",[$id]);
-        if(count($accountType) == 0) {
+        $accountType = DB::select('SELECT * FROM account_types WHERE id=?', [$id]);
+        if (count($accountType) == 0) {
             return null;
         }
+
         return AccountTypeRowMapper::ObjectToAccountType($accountType[0]);
     }
 
     public function list(): Collection
     {
-        return collect(DB::select("SELECT * FROM account_types"))->map(function ($accountType) {
+        return collect(DB::select('SELECT * FROM account_types'))->map(function ($accountType) {
             return AccountTypeRowMapper::ObjectToAccountType($accountType);
         });
-    }
-
-    public function findBySlugname(string $slugname): ?AccountType
-    {
-        // TODO: Implement findBySlugname() method.
-    }
-
-    public function create(AccountType $accountType): AccountType
-    {
-        // TODO: Implement create() method.
     }
 }

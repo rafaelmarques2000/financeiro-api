@@ -12,30 +12,31 @@ class UserRepository implements UserRepositoryInterface
 {
     public function list(): Collection
     {
-        return collect(DB::select("SELECT * from users"))->map(function ($user) {
+        return collect(DB::select('SELECT * from users'))->map(function ($user) {
             return UserRowMapper::ObjectToUser($user);
         });
     }
 
     public function findById(string $id): ?User
     {
-        $user = DB::select("SELECT * FROM users WHERE id=? AND active=true",[$id]);
-        if(count($user) == 0) {
+        $user = DB::select('SELECT * FROM users WHERE id=? AND active=true', [$id]);
+        if (count($user) == 0) {
             return null;
         }
+
         return UserRowMapper::ObjectToUser($user[0]);
     }
 
     public function findByUsernameAndPassword(string $username, string $password): ?User
     {
-        $user = DB::select("SELECT * FROM users WHERE username=? AND password = ? AND active=true",[
+        $user = DB::select('SELECT * FROM users WHERE username=? AND password = ? AND active=true', [
             $username,
-            $password
+            $password,
         ]);
-        if(count($user) == 0) {
+        if (count($user) == 0) {
             return null;
         }
+
         return UserRowMapper::ObjectToUser($user[0]);
     }
-
 }

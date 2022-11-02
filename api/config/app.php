@@ -201,7 +201,7 @@ return [
         /*
          * Custom services provider
          */
-        App\Api\V1\ApiV1ServiceProvider::class
+        App\Api\V1\ApiV1ServiceProvider::class,
     ],
 
     /*

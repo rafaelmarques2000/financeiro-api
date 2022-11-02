@@ -19,9 +19,10 @@ class AccountTypeService implements AccountTypeServiceInterface
     public function findById(string $id): AccountType
     {
         $accountType = $this->accountTypeRepository->findById($id);
-        if(!$accountType) {
-            throw new AccountTypeNotFoundException("Tipo de conta não encontrado");
+        if (! $accountType) {
+            throw new AccountTypeNotFoundException('Tipo de conta não encontrado');
         }
+
         return $accountType;
     }
 

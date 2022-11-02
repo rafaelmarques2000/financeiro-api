@@ -8,5 +8,6 @@ use Illuminate\Support\Collection;
 interface AccountTypeServiceInterface
 {
     public function list(): Collection;
-    public function findById(string $id) : AccountType;
+
+    public function findById(string $id): AccountType;
 }

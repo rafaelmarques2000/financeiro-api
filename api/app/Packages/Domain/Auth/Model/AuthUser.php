@@ -5,6 +5,7 @@ namespace App\Packages\Domain\Auth\Model;
 class AuthUser
 {
     private string $id;
+
     private string $showName;
 
     public function __construct(string $id, string $showName)

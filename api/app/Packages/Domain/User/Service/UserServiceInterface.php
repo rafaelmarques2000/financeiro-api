@@ -7,7 +7,9 @@ use Illuminate\Support\Collection;
 
 interface UserServiceInterface
 {
-     public function list(): Collection;
-     public function findById(string $id): User;
-     public function findByUsernameAndPassword(string $username, string $password): ?User;
+    public function list(): Collection;
+
+    public function findById(string $id): User;
+
+    public function findByUsernameAndPassword(string $username, string $password): ?User;
 }

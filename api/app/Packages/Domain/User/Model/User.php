@@ -5,9 +5,13 @@ namespace App\Packages\Domain\User\Model;
 class User
 {
     private string $id;
+
     private string $username;
+
     private string $password;
+
     private string $showName;
+
     private bool $active;
 
     public function __construct(string $id, string $username, string $password, string $showName, bool $active)

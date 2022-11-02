@@ -14,12 +14,13 @@ class AccountTypeSeeder extends Seeder
         $accountTypes = $this->getAccountTypeList();
 
         $accountTypes->each(function (array $item) {
-            $dbAccount = DB::select("SELECT * FROM account_types WHERE slug_name = ?", [$item['slugname']]);
-            if(empty($dbAccount)) {
-                DB::insert("INSERT INTO account_types (id, description, slug_name) VALUES(?, ?, ?)", [
+            $dbAccount = DB::select('SELECT * FROM account_types WHERE slug_name = ?', [$item['slugname']]);
+            if (empty($dbAccount)) {
+                DB::insert('INSERT INTO account_types (id, description, slug_name, color) VALUES(?, ?, ?, ?)', [
                     $item['id'],
                     $item['description'],
                     $item['slugname'],
+                    $item['color']
                 ]);
             }
         });
@@ -31,23 +32,27 @@ class AccountTypeSeeder extends Seeder
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'conta_corrente',
-                'description' => 'Conta Corrente'
+                'description' => 'Conta Corrente',
+                'color' => '#f2c3ff',
             ],
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'poupanca_reserva',
-                'description' => 'Poupança/Reserva'
+                'description' => 'Poupança/Reserva',
+                'color' => '#2ea88c',
             ],
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'investimento',
-                'description' => 'investimento'
+                'description' => 'Investimento',
+                'color' => '#a560cb',
             ],
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'cartao_credito',
-                'description' => 'Cartão de crédito'
-            ]
+                'description' => 'Cartão de crédito',
+                'color' => '#f27966',
+            ],
         ]);
     }
 }
