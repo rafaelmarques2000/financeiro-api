@@ -65,7 +65,7 @@ class AccountController extends Controller
         try {
             $accountType = $this->accountTypeService->findById($request->get('account_type_id'));
             $accountModel = AccountRequestMapper::requestToAccount($request->all(), $accountType);
-            $accountCreated = $this->accountService->create($userId, $accountModel);
+            $accountCreated = AccountResponse::parseAccount($this->accountService->create($userId, $accountModel));
 
             return response()->json(SuccessResponse::parse('Conta criada com sucesso', $accountCreated));
         } catch (NotFoundException $exception) {
@@ -83,7 +83,7 @@ class AccountController extends Controller
         try {
             $accountType = $this->accountTypeService->findById($request->post('account_type_id'));
             $accountModel = AccountRequestMapper::requestToAccountUpdated($request->all(), $accountId, $accountType);
-            $accountUpdated = $this->accountService->update($userId, $accountModel);
+            $accountUpdated = AccountResponse::parseAccount($this->accountService->update($userId, $accountModel));
 
             return response()->json(SuccessResponse::parse('Conta atualizada com sucesso', $accountUpdated));
         } catch (NotFoundException $exception) {

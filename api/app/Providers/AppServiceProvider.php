@@ -10,11 +10,22 @@ use App\Packages\Domain\AccountType\Service\AccountTypeService;
 use App\Packages\Domain\AccountType\Service\AccountTypeServiceInterface;
 use App\Packages\Domain\Auth\Service\AuthService;
 use App\Packages\Domain\Auth\Service\AuthServiceInterface;
+use App\Packages\Domain\Transaction\Service\TransactionService;
+use App\Packages\Domain\Transaction\Service\TransactionServiceInterface;
+use App\Packages\Domain\TransactionCategory\Repository\TransactionCategoryRepositoryInterface;
+use App\Packages\Domain\TransactionCategory\Service\TransactionCategoryService;
+use App\Packages\Domain\TransactionCategory\Service\TransactionCategoryServiceInterface;
+use App\Packages\Domain\TransactionType\Repository\TransactionTypeRepositoryInterface;
+use App\Packages\Domain\TransactionType\Service\TransactionTypeService;
+use App\Packages\Domain\TransactionType\Service\TransactionTypeServiceInterface;
 use App\Packages\Domain\User\Repository\UserRepositoryInterface;
 use App\Packages\Domain\User\Service\UserService;
 use App\Packages\Domain\User\Service\UserServiceInterface;
 use App\Packages\Infra\Repository\AccountRepository;
 use App\Packages\Infra\Repository\AccountTypeRepository;
+use App\Packages\Infra\Repository\TransactionCategoryRepository;
+use App\Packages\Infra\Repository\TransactionRepository;
+use App\Packages\Infra\Repository\TransactionTypeRepository;
 use App\Packages\Infra\Repository\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -63,6 +74,30 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AccountTypeServiceInterface::class, function ($app) {
             return new AccountTypeService($app->make(AccountTypeRepository::class));
+        });
+
+        $this->app->bind(TransactionTypeRepositoryInterface::class, function () {
+            return new TransactionTypeRepository();
+        });
+
+        $this->app->bind(TransactionTypeServiceInterface::class, function ($app) {
+            return new TransactionTypeService($app->make(TransactionTypeRepository::class));
+        });
+
+        $this->app->bind(TransactionCategoryRepositoryInterface::class, function () {
+            return new TransactionCategoryRepository();
+        });
+
+        $this->app->bind(TransactionCategoryServiceInterface::class, function ($app) {
+            return new TransactionCategoryService($app->make(TransactionCategoryRepository::class));
+        });
+
+        $this->app->bind(TransactionCategoryRepositoryInterface::class, function () {
+            return new TransactionRepository();
+        });
+
+        $this->app->bind(TransactionServiceInterface::class, function ($app) {
+            return new TransactionService($app->make(TransactionRepository::class));
         });
     }
 }
