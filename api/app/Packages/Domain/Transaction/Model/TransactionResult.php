@@ -49,4 +49,21 @@ class TransactionResult
     {
         return $this->items;
     }
+
+    public function calculateTotalTransactions(): ?float
+    {
+        return $this->items->reduce((function($carry, Transaction $value){
+            $total = 0;
+            if($value->getTransactionType()->getSlugName() == "receita") {
+                $total+=$value->getAmount();
+                dump('receita', $total);
+            }
+
+            if($value->getTransactionType()->getSlugName() == "despesa") {
+                $total-=$value->getAmount();
+                dump('despesa', $total);
+            }
+            return ($total) / 100;
+        }));
+    }
 }

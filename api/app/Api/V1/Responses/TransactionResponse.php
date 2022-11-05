@@ -19,6 +19,7 @@ class TransactionResponse
             'items' => $transactionResult->getItems()->map(function (Transaction $transaction) {
                 return self::parseTransaction($transaction);
             })->toArray(),
+            'total' => $transactionResult->calculateTotalTransactions() ?? 0
         ];
     }
 
