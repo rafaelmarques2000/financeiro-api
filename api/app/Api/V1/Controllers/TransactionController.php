@@ -37,7 +37,7 @@ class TransactionController extends Controller
                 $request->query('end_date'),
             );
 
-            return response()->json(TransactionResponse::parseTransactionList($this->transactionService->findAll($userId,$accountId,$accountSearch)));
+            return response()->json(TransactionResponse::parseTransactionList($this->transactionService->findAll($userId, $accountId, $accountSearch)));
         } catch (\Exception $exception) {
             return response()->json(
                 ErrorResponse::parseError($exception->getMessage()),

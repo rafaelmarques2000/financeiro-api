@@ -55,7 +55,7 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             $this->countQuery .= " AND t.description ILIKE '%".$transactionSearch->getDescription()."%'";
         }
 
-        if($transactionSearch->getInitialDate() != null && $transactionSearch->getEndDate() != null) {
+        if ($transactionSearch->getInitialDate() != null && $transactionSearch->getEndDate() != null) {
             $query .= " AND t.date BETWEEN '".$transactionSearch->getInitialDate()."' AND '".$transactionSearch->getEndDate()."'";
             $this->countQuery .= " AND t.date BETWEEN '".$transactionSearch->getInitialDate()."' AND '".$transactionSearch->getEndDate()."'";
         }
@@ -65,8 +65,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
 
         $query .= ' LIMIT '.$limit.' OFFSET '.$totalLimitRange;
 
-        $result = collect(DB::select($query, [$accountId, $userId]))->map(function ($transaction) use($userId){
-            return TransactionMapper::ObjectToTransaction($userId,$transaction);
+        $result = collect(DB::select($query, [$accountId, $userId]))->map(function ($transaction) use ($userId) {
+            return TransactionMapper::ObjectToTransaction($userId, $transaction);
         });
 
         return new TransactionResult(
