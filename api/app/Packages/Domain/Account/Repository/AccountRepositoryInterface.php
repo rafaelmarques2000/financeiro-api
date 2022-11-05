@@ -8,7 +8,7 @@ use App\Packages\Domain\Account\Model\AccountSearch;
 
 interface AccountRepositoryInterface
 {
-    public function list(string $userId, AccountSearch $accountSearch): AccountResult;
+    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult;
 
     public function findById(string $userId, string $id): ?Account;
 

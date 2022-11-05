@@ -37,7 +37,7 @@ class AccountController extends Controller
                 $request->query('limit'),
             );
 
-            return response()->json(AccountResponse::parseAccountList($this->accountService->list($userId, $accountSearch)));
+            return response()->json(AccountResponse::parseAccountList($this->accountService->findAll($userId, $accountSearch)));
         } catch (\Exception $exception) {
             return response()->json(
                 ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),

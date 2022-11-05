@@ -2,19 +2,24 @@
 
 namespace App\Api\V1\Responses;
 
+use App\Packages\Domain\Transaction\Model\TransactionResult;
 use App\Packages\Domain\Transaction\Model\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class TransactionResponse
 {
-    public static function parseTransactionList(Collection $transactionList): array
+    public static function parseTransactionList(TransactionResult $transactionResult): array
     {
-        return $transactionList->map(
-            function (Transaction $transaction) {
+        return [
+            'total_pages' => $transactionResult->getTotalPages(),
+            'total_rows' => $transactionResult->getTotalRows(),
+            'current_page' => $transactionResult->getCurrentPage(),
+            'items_per_page' => $transactionResult->getItemPerPage(),
+            'items' => $transactionResult->getItems()->map(function (Transaction $transaction) {
                 return self::parseTransaction($transaction);
-            }
-        )->toArray();
+            })->toArray(),
+        ];
     }
 
     public static function parseTransactionInstallments(Collection $transactionList): array

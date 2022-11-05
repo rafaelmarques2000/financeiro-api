@@ -38,7 +38,7 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
                         WHERE u.id = ? AND a.deleted_at is null
                     ';
 
-    public function list(string $userId, AccountSearch $accountSearch): AccountResult
+    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
     {
         $query = self::SELECT_ACCOUNT_QUERY;
         if ($accountSearch->getDescription() != null) {

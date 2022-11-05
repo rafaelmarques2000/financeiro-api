@@ -4,6 +4,8 @@ namespace App\Packages\Domain\Transaction\Service;
 
 use App\Packages\Domain\Transaction\Exception\TransactionNotFoundException;
 use App\Packages\Domain\Transaction\Model\Transaction;
+use App\Packages\Domain\Transaction\Model\TransactionResult;
+use App\Packages\Domain\Transaction\Model\TransactionSearch;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -16,6 +18,11 @@ class TransactionService implements TransactionServiceInterface
     public function __construct(TransactionRepositoryInterface $transactionRepository)
     {
         $this->transactionRepository = $transactionRepository;
+    }
+
+    public function findAll(string $userId, string $accountId, TransactionSearch $transactionSearch): TransactionResult
+    {
+        return $this->transactionRepository->findAll($userId, $accountId, $transactionSearch);
     }
 
     public function findById(string $userId, string $accountId, string $transactionId): Transaction
@@ -58,7 +65,10 @@ class TransactionService implements TransactionServiceInterface
 
     public function update(string $userId, string $accountId, Transaction $transaction): Transaction
     {
-        // TODO: Implement update() method.
+        if (!$this->hasTransaction($userId, $accountId, $transaction->getId())) {
+            throw new TransactionNotFoundException('Transação não encontrada');
+        }
+        return $this->transactionRepository->update($userId, $accountId, $transaction);
     }
 
     public function delete(string $userId, string $accountId, string $transactionId): void

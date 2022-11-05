@@ -17,9 +17,9 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository = $accountRepository;
     }
 
-    public function list(string $userId, AccountSearch $accountSearch): AccountResult
+    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
     {
-        return $this->accountRepository->list($userId, $accountSearch);
+        return $this->accountRepository->findAll($userId, $accountSearch);
     }
 
     public function findById(string $userId, string $accountId): Account

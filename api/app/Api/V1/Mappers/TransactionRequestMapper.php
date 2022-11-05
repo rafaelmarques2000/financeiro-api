@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 
 class TransactionRequestMapper
 {
-    public static function requestToTransaction(string $userId, string $accountId, array $body): Transaction
+    public static function requestToTransaction(string $userId, string $accountId, array $body, string $transactionId = null): Transaction
     {
         /** @var TransactionTypeService $transactionTypeService */
         $transactionTypeService = app(TransactionTypeServiceInterface::class);
@@ -28,7 +28,7 @@ class TransactionRequestMapper
         $account = $accountService->findById($userId, $accountId);
 
         return new Transaction(
-            Str::uuid()->toString(),
+            $transactionId ?? Str::uuid()->toString(),
             $body['description'],
             Carbon::createFromDate($body['date']),
             $transactionType,
@@ -39,7 +39,7 @@ class TransactionRequestMapper
             Carbon::now(),
             $body['installment'] ?? false,
             $body['amount_installments'] ?? null,
-            null
+            $body['current_installment'] ?? null
         );
     }
 }

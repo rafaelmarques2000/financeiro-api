@@ -3,6 +3,8 @@
 namespace App\Packages\Infra\Repository;
 
 use App\Packages\Domain\Transaction\Model\Transaction;
+use App\Packages\Domain\Transaction\Model\TransactionResult;
+use App\Packages\Domain\Transaction\Model\TransactionSearch;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use App\Packages\Infra\Mapper\TransactionMapper;
 use Carbon\Carbon;
@@ -10,7 +12,7 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class TransactionRepository implements TransactionRepositoryInterface
+class TransactionRepository extends AbstractPaginatedRepository implements TransactionRepositoryInterface
 {
     private const SELECT_QUERY = "
         SELECT
@@ -30,11 +32,55 @@ class TransactionRepository implements TransactionRepositoryInterface
             join transaction_categories tc on t.category_id = tc.id
             join accounts a on t.account_id = a.id
             join type_transaction tt on tc.type_transaction_id = tt.id
+            join user_accounts ua on a.id = ua.account_id
     ";
+
+    protected string $countQuery = "
+        SELECT
+            COUNT(t.id) as total
+            FROM transaction t
+            join transaction_categories tc on t.category_id = tc.id
+            join accounts a on t.account_id = a.id
+            join type_transaction tt on tc.type_transaction_id = tt.id
+            join user_accounts ua on a.id = ua.account_id
+            WHERE t.account_id = ?
+    ";
+
+    public function findAll(string $userId, string $accountId, TransactionSearch $transactionSearch): TransactionResult
+    {
+        $query = self::SELECT_QUERY. "WHERE t.account_id= ? AND ua.user_id=? AND t.deleted_at is null";
+
+        if ($transactionSearch->getDescription() != null) {
+            $query .= " AND t.description ILIKE '%".$transactionSearch->getDescription()."%'";
+            $this->countQuery .= " AND t.description ILIKE '%".$transactionSearch->getDescription()."%'";
+        }
+
+        if($transactionSearch->getInitialDate() != null && $transactionSearch->getEndDate() != null) {
+            $query .= " AND t.date BETWEEN '".$transactionSearch->getInitialDate()."' AND '".$transactionSearch->getEndDate()."'";
+            $this->countQuery .= " AND t.date BETWEEN '".$transactionSearch->getInitialDate()."' AND '".$transactionSearch->getEndDate()."'";
+        }
+
+        $totalLimitRange = $this->calculateLimitOffset($transactionSearch->getLimit(), $transactionSearch->getPage());
+        $limit = $transactionSearch->getLimit();
+
+        $query .= ' LIMIT '.$limit.' OFFSET '.$totalLimitRange;
+
+        $result = collect(DB::select($query, [$accountId, $userId]))->map(function ($transaction) use($userId){
+            return TransactionMapper::ObjectToTransaction($userId,$transaction);
+        });
+
+        return new TransactionResult(
+            $this->calculateTotalPages($accountId, $transactionSearch->getLimit()),
+            $this->calculateTotalRows($accountId),
+            $transactionSearch->getPage(),
+            $transactionSearch->getLimit(),
+            $result
+        );
+    }
 
     public function findById(string $userId, string $accountId, string $transactionId): ?Transaction
     {
-        $query = DB::select(self::SELECT_QUERY.' WHERE t.account_id = ? AND t.id = ? AND t.deleted_at is null', [$accountId, $transactionId]);
+        $query = DB::select(self::SELECT_QUERY.' WHERE t.account_id = ? AND ua.user_id=? AND t.id = ? AND t.deleted_at is null', [$accountId, $userId, $transactionId]);
 
         if (count($query) > 0) {
             return TransactionMapper::ObjectToTransaction($userId, $query[0]);
@@ -104,7 +150,27 @@ class TransactionRepository implements TransactionRepositoryInterface
 
     public function update(string $userId, string $accountId, Transaction $transaction): Transaction
     {
-        // TODO: Implement update() method.
+        $query = DB::update("UPDATE transaction SET
+                       description=?,
+                       date=?,
+                       category_id=?,
+                       account_id=?,
+                       amount = ?,
+                       transaction_type_id = ?,
+                       updated_at = ?
+                       WHERE account_id = ? AND id = ?
+                       ", [
+                           $transaction->getDescription(),
+                           $transaction->getDate(),
+                           $transaction->getTransactionCategory()->getId(),
+                           $transaction->getAccount()->getId(),
+                           $transaction->getAmount(),
+                           $transaction->getTransactionType()->getId(),
+                           Carbon::now(),
+                           $accountId,
+                           $transaction->getId()
+                          ]);
+        return $this->findById($userId, $accountId, $transaction->getId());
     }
 
     public function delete(string $userId, string $accountId, string $transactionId): void
