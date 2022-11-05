@@ -8,10 +8,10 @@ class TransactionTypeMapper
 {
     public static function ObjectToTransactionType(object $transactionType): TransactionType
     {
-       return new TransactionType(
-           $transactionType->id,
-           $transactionType->description,
-           $transactionType->slug_name
-       );
+        return new TransactionType(
+            $transactionType->id,
+            $transactionType->description,
+            $transactionType->slug_name
+        );
     }
 }

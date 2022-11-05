@@ -10,19 +10,20 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-    function findAll(): Collection
+    public function findAll(): Collection
     {
-       return collect(DB::select("SELECT * FROM type_transaction"))->map(function ($transactionType) {
-           return TransactionTypeMapper::ObjectToTransactionType($transactionType);
-       });
+        return collect(DB::select('SELECT * FROM type_transaction'))->map(function ($transactionType) {
+            return TransactionTypeMapper::ObjectToTransactionType($transactionType);
+        });
     }
 
-    function findById(string $id): ?TransactionType
+    public function findById(string $id): ?TransactionType
     {
-        $query =  DB::select("SELECT * FROM type_transaction WHERE id=?", [$id]);
-        if(count($query) > 0) {
+        $query = DB::select('SELECT * FROM type_transaction WHERE id=?', [$id]);
+        if (count($query) > 0) {
             return TransactionTypeMapper::ObjectToTransactionType($query[0]);
         }
+
         return null;
     }
 }

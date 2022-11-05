@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionCategoryRepository implements TransactionCategoryRepositoryInterface
 {
-    private const SELECT_TRANSACTION_CATEGORY = "
+    private const SELECT_TRANSACTION_CATEGORY = '
         SELECT tc.id,
                tc.description,
                tc.slug_name,
@@ -19,21 +19,22 @@ class TransactionCategoryRepository implements TransactionCategoryRepositoryInte
                tt.slug_name as type_transaction_slugname
             from transaction_categories tc join type_transaction
             tt on tc.type_transaction_id = tt.id
-    ";
+    ';
 
-    function findAll(): Collection
+    public function findAll(): Collection
     {
-       return collect(DB::select(self::SELECT_TRANSACTION_CATEGORY))->map(function ($transactionCategory) {
-           return TransactionCategoryMapper::ObjectToTransactionCategory($transactionCategory);
-       });
+        return collect(DB::select(self::SELECT_TRANSACTION_CATEGORY))->map(function ($transactionCategory) {
+            return TransactionCategoryMapper::ObjectToTransactionCategory($transactionCategory);
+        });
     }
 
-    function findByTransactionTypeAndCategoryId(string $transactionType, string $categoryId): ?TransactionCategory
+    public function findByTransactionTypeAndCategoryId(string $transactionType, string $categoryId): ?TransactionCategory
     {
-        $query = DB::select(self::SELECT_TRANSACTION_CATEGORY. " WHERE tt.id = ? AND tc.id = ?", [$transactionType, $categoryId]);
-        if(count($query) > 0) {
+        $query = DB::select(self::SELECT_TRANSACTION_CATEGORY.' WHERE tt.id = ? AND tc.id = ?', [$transactionType, $categoryId]);
+        if (count($query) > 0) {
             return TransactionCategoryMapper::ObjectToTransactionCategory($query[0]);
         }
+
         return null;
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 
 interface TransactionCategoryServiceInterface
 {
-    function findAll(): Collection;
-    function findByTransactionTypeAndCategoryId(string $transactionType,  string $categoryId): ? TransactionCategory;
+    public function findAll(): Collection;
+
+    public function findByTransactionTypeAndCategoryId(string $transactionType, string $categoryId): ?TransactionCategory;
 }

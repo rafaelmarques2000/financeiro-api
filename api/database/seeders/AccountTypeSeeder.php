@@ -20,7 +20,7 @@ class AccountTypeSeeder extends Seeder
                     $item['id'],
                     $item['description'],
                     $item['slugname'],
-                    $item['color']
+                    $item['color'],
                 ]);
             }
         });

@@ -25,6 +25,22 @@ class TransactionController extends Controller
         $this->transactionService = $transactionService;
     }
 
+    public function show(Request $request, string $userId, string $accountId, string $transactionId): JsonResponse
+    {
+        try {
+            return response()->json(TransactionResponse::parseTransaction($this->transactionService->findById($userId, $accountId, $transactionId)));
+        } catch (NotFoundException $exception) {
+            return response()->json(
+                ErrorResponse::parseError($exception->getMessage()),
+                HttpStatus::NOT_FOUND->value
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servido, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
+        }
+    }
 
     public function store(Request $request, string $userId, string $accountId): JsonResponse
     {
@@ -32,20 +48,39 @@ class TransactionController extends Controller
             $transactionCreated = $this->transactionService->create(
                 $userId,
                 $accountId,
-                TransactionRequestMapper::requestToTransaction($userId, $accountId,$request->all())
+                TransactionRequestMapper::requestToTransaction($userId, $accountId, $request->all())
             );
 
             $parserTransaction = $this->formatTransactionResponse($transactionCreated);
 
-            return response()->json(SuccessResponse::parse("Transação criada com sucesso", $parserTransaction));
-        }catch (NotFoundException $exception) {
+            return response()->json(SuccessResponse::parse('Transação criada com sucesso', $parserTransaction));
+        } catch (NotFoundException $exception) {
             return response()->json(
                 ErrorResponse::parseError($exception->getMessage()),
                 HttpStatus::NOT_FOUND->value
             );
         } catch (Exception $exception) {
             return response()->json(
-                ErrorResponse::parseError("Falha interna do servido, tente novamente ou contate o administrador"),
+                ErrorResponse::parseError('Falha interna do servido, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
+        }
+    }
+
+    public function destroy(Request $request, string $userId, string $accountId, string $transactionId): JsonResponse
+    {
+        try {
+            $this->transactionService->delete($userId, $accountId, $transactionId);
+
+            return response()->json('', HttpStatus::NOT_CONTENT->value);
+        } catch (NotFoundException $exception) {
+            return response()->json(
+                ErrorResponse::parseError($exception->getMessage()),
+                HttpStatus::NOT_FOUND->value
+            );
+        } catch (Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError('Falha interna do servido, tente novamente ou contate o administrador'),
                 HttpStatus::INTERNAL_SERVER_ERROR->value
             );
         }
@@ -56,6 +91,7 @@ class TransactionController extends Controller
         if ($transactionCreated instanceof Collection) {
             return TransactionResponse::parseTransactionInstallments($transactionCreated);
         }
+
         return TransactionResponse::parseTransaction($transactionCreated);
     }
 }

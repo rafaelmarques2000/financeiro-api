@@ -5,9 +5,13 @@ namespace App\Packages\Domain\Transaction\Service;
 use App\Packages\Domain\Transaction\Model\Transaction;
 use Illuminate\Support\Collection;
 
-
 interface TransactionServiceInterface
 {
-    function create(string $userId, string $accountId, Transaction $transaction): Transaction | Collection;
+    public function findById(string $userId, string $accountId, string $transactionId): Transaction;
 
+    public function create(string $userId, string $accountId, Transaction $transaction): Transaction | Collection;
+
+    public function update(string $userId, string $accountId, Transaction $transaction): Transaction;
+
+    public function delete(string $userId, string $accountId, string $transactionId): void;
 }

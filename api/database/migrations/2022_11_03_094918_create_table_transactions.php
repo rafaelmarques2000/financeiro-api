@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     public function up()
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE transaction(
                id uuid primary key,
                description varchar(200) not null,
@@ -23,7 +21,7 @@ return new class extends Migration
                foreign key (category_id) references transaction_categories(id),
                foreign key (account_id) references accounts(id)
             );
-        ");
+        ');
     }
 
     public function down()

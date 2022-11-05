@@ -5,7 +5,9 @@ namespace App\Packages\Domain\TransactionType\Model;
 class TransactionType
 {
     private string $id;
+
     private string $description;
+
     private string $slugName;
 
     public function __construct(string $id, string $description, string $slugName)

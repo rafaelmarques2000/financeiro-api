@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
             AccountTypeSeeder::class,
             UserSeeder::class,
             TransactionTypeSeeder::class,
-            TransactionCategoriesSeeder::class
+            TransactionCategoriesSeeder::class,
         ]);
     }
 }

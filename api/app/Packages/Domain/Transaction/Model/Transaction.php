@@ -10,16 +10,27 @@ use DateTime;
 class Transaction
 {
     private string $id;
+
     private string $description;
+
     private DateTime $date;
+
     private TransactionType $transactionType;
+
     private Account $account;
+
     private TransactionCategory $transactionCategory;
+
     private int $amount;
+
     private DateTime $createdAt;
+
     private DateTime $updatedAt;
+
     private ?bool $installments;
+
     private ?int $amountInstallments;
+
     private ?int $currentInstallment;
 
     public function __construct(
@@ -35,8 +46,7 @@ class Transaction
         ?bool $installments,
         ?int $amountInstallments,
         ?int $currentInstallment,
-    )
-    {
+    ) {
         $this->id = $id;
         $this->description = $description;
         $this->date = $date;
@@ -49,9 +59,7 @@ class Transaction
         $this->installments = $installments;
         $this->amountInstallments = $amountInstallments;
         $this->currentInstallment = $currentInstallment;
-
     }
-
 
     public function getId(): string
     {

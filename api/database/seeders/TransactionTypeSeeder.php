@@ -18,7 +18,7 @@ class TransactionTypeSeeder extends Seeder
                 DB::insert('INSERT INTO type_transaction (id, description, slug_name) VALUES(?, ? , ?)', [
                     $item['id'],
                     $item['description'],
-                    $item['slugname']
+                    $item['slugname'],
                 ]);
             }
         });
@@ -35,8 +35,8 @@ class TransactionTypeSeeder extends Seeder
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'despesa',
-                'description' => 'Despesa'
-            ]
+                'description' => 'Despesa',
+            ],
         ]);
     }
 }

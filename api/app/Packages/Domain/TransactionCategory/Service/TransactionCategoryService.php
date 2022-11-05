@@ -16,18 +16,18 @@ class TransactionCategoryService implements TransactionCategoryServiceInterface
         $this->transactionCategoryRepository = $transactionCategoryRepository;
     }
 
-
-    function findAll(): Collection
+    public function findAll(): Collection
     {
         return $this->transactionCategoryRepository->findAll();
     }
 
-    function findByTransactionTypeAndCategoryId(string $transactionType, string $categoryId): ?TransactionCategory
+    public function findByTransactionTypeAndCategoryId(string $transactionType, string $categoryId): ?TransactionCategory
     {
         $transactionCategory = $this->transactionCategoryRepository->findByTransactionTypeAndCategoryId($transactionType, $categoryId);
-        if($transactionCategory == null) {
-            throw new TransactionCategoryNotFoundException("Categoria não encontrada");
+        if ($transactionCategory == null) {
+            throw new TransactionCategoryNotFoundException('Categoria não encontrada');
         }
+
         return $transactionCategory;
     }
 }

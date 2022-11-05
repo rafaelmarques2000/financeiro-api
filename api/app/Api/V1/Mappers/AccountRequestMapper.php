@@ -22,8 +22,7 @@ class AccountRequestMapper
         array $body,
         string $accountId,
         AccountType $accountType
-    ): Account
-    {
+    ): Account {
         return new Account(
             $accountId,
             $body['description'],

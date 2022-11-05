@@ -21,7 +21,7 @@ class AccountTypeResponse
               'id' => $accountType->getId(),
               'description' => $accountType->getDescription(),
               'slug_name' => $accountType->getSlugName(),
-              'color' => $accountType->getColor()
+              'color' => $accountType->getColor(),
           ];
     }
 }

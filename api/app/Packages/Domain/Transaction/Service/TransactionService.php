@@ -2,6 +2,7 @@
 
 namespace App\Packages\Domain\Transaction\Service;
 
+use App\Packages\Domain\Transaction\Exception\TransactionNotFoundException;
 use App\Packages\Domain\Transaction\Model\Transaction;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use Carbon\Carbon;
@@ -17,18 +18,26 @@ class TransactionService implements TransactionServiceInterface
         $this->transactionRepository = $transactionRepository;
     }
 
-    function create(string $userId, string $accountId, Transaction $transaction): Transaction | Collection
+    public function findById(string $userId, string $accountId, string $transactionId): Transaction
     {
-         if(!$transaction->isInstallments()) {
+        if (!$this->hasTransaction($userId, $accountId, $transactionId)) {
+            throw new TransactionNotFoundException('Transação não encontrada');
+        }
+        return $this->transactionRepository->findById($userId, $accountId, $transactionId);
+    }
+
+    public function create(string $userId, string $accountId, Transaction $transaction): Transaction | Collection
+    {
+        if (! $transaction->isInstallments()) {
             return $this->transactionRepository->create($userId, $accountId, $transaction);
-         }
+        }
 
-         $amount = $transaction->getAmount() / $transaction->getAmountInstallments();
-         $transactions = collect([]);
+        $amount = $transaction->getAmount() / $transaction->getAmountInstallments();
+        $transactions = collect([]);
 
-         for($i=1; $i <= $transaction->getAmountInstallments();$i++) {
-             $date = $this->generateInstallmentsPeriod($i, $transaction);
-             $transactions->add(new Transaction(
+        for ($i = 1; $i <= $transaction->getAmountInstallments(); $i++) {
+            $date = $this->generateInstallmentsPeriod($i, $transaction);
+            $transactions->add(new Transaction(
                 Str::uuid()->toString(),
                 $transaction->getDescription(),
                 $date,
@@ -41,15 +50,32 @@ class TransactionService implements TransactionServiceInterface
                 $transaction->isInstallments(),
                 $transaction->getAmountInstallments(),
                 $i
-             ));
-         }
+            ));
+        }
 
-         return $this->transactionRepository->createInCollection($userId, $accountId, $transactions);
+        return $this->transactionRepository->createInCollection($userId, $accountId, $transactions);
+    }
 
+    public function update(string $userId, string $accountId, Transaction $transaction): Transaction
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete(string $userId, string $accountId, string $transactionId): void
+    {
+        if (!$this->hasTransaction($userId, $accountId, $transactionId)) {
+            throw new TransactionNotFoundException('Transação não encontrada');
+        }
+        $this->transactionRepository->delete($userId, $accountId, $transactionId);
     }
 
     private function generateInstallmentsPeriod(int $i, Transaction $transaction): Carbon
     {
         return $i == 1 ? Carbon::createFromDate($transaction->getDate()) : Carbon::createFromDate($transaction->getDate())->addMonths($i - 1);
+    }
+
+    private function hasTransaction(string $userId, string $accountId, string $transactionId): bool
+    {
+        return $this->transactionRepository->findById($userId, $accountId, $transactionId) != null;
     }
 }

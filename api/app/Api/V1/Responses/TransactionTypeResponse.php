@@ -11,9 +11,9 @@ class TransactionTypeResponse
     {
         return $transactionTypeCollection->map(function (TransactionType $transactionType) {
             return [
-               'id' => $transactionType->getId(),
-               'description' => $transactionType->getDescription(),
-               'slug_name' => $transactionType->getSlugName()
+                'id' => $transactionType->getId(),
+                'description' => $transactionType->getDescription(),
+                'slug_name' => $transactionType->getSlugName(),
             ];
         })->toArray();
     }

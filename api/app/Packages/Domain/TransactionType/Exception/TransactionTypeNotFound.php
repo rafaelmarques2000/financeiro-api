@@ -6,5 +6,4 @@ use App\Packages\Domain\General\Exceptions\NotFoundException;
 
 class TransactionTypeNotFound extends NotFoundException
 {
-
 }

@@ -14,19 +14,19 @@ Route::post('/auth', [AuthController::class, 'auth']);
 Route::post('/check-token', [AuthController::class, 'checkJWTToken']);
 
 //Route::middleware(JwtAuthGuard::class)->group(function () {
-    Route::resources([
-        'users' => UserController::class,
-        'users.accounts' => AccountController::class,
-        'users.accounts.transactions' => TransactionController::class
-    ]);
-    Route::resource('account-types', AccountTypeController::class)->only([
-        'index',
-    ]);
-    Route::resource('transaction-types', TransactionTypeController::class)->only([
-        'index',
-    ]);
+Route::resources([
+    'users' => UserController::class,
+    'users.accounts' => AccountController::class,
+    'users.accounts.transactions' => TransactionController::class,
+]);
+Route::resource('account-types', AccountTypeController::class)->only([
+    'index',
+]);
+Route::resource('transaction-types', TransactionTypeController::class)->only([
+    'index',
+]);
 
-    Route::resource('transaction-categories', TransactionCategoryController::class)->only([
-        'index','show'
-    ]);
+Route::resource('transaction-categories', TransactionCategoryController::class)->only([
+    'index', 'show',
+]);
 //});

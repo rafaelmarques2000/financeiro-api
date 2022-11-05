@@ -10,8 +10,8 @@ class TransactionCategoryResponse
     public static function parseTransactionCategoryList(Collection $transactionCategoriesList): array
     {
         return $transactionCategoriesList->map(function (TransactionCategory $transactionCategory) {
-                return self::formatTransactionCategoryResponse($transactionCategory);
-            })->toArray();
+            return self::formatTransactionCategoryResponse($transactionCategory);
+        })->toArray();
     }
 
     public static function parseTransactionCategory(TransactionCategory $transactionCategory): array
@@ -31,7 +31,7 @@ class TransactionCategoryResponse
                 'id' => $transactionType->getId(),
                 'description' => $transactionType->getDescription(),
                 'slug_name' => $transactionType->getSlugName(),
-            ]
+            ],
         ];
     }
 }

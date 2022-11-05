@@ -4,11 +4,9 @@ namespace App\Api\V1\Controllers;
 
 use App\Api\V1\Responses\ErrorResponse;
 use App\Api\V1\Responses\TransactionCategoryResponse;
-use App\Api\V1\Responses\TransactionTypeResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\TransactionCategory\Service\TransactionCategoryServiceInterface;
-use App\Packages\Domain\TransactionType\Service\TransactionTypeServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

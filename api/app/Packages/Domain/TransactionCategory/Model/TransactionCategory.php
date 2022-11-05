@@ -7,8 +7,11 @@ use App\Packages\Domain\TransactionType\Model\TransactionType;
 class TransactionCategory
 {
     private string $id;
+
     private string $description;
+
     private string $slugName;
+
     private TransactionType $transactionType;
 
     public function __construct(string $id, string $description, string $slugName, TransactionType $transactionType)

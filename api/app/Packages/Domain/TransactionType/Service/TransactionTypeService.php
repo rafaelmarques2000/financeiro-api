@@ -6,7 +6,6 @@ use App\Packages\Domain\TransactionType\Exception\TransactionTypeNotFound;
 use App\Packages\Domain\TransactionType\Model\TransactionType;
 use App\Packages\Domain\TransactionType\Repository\TransactionTypeRepositoryInterface;
 use Illuminate\Support\Collection;
-use function PHPUnit\Framework\isNull;
 
 class TransactionTypeService implements TransactionTypeServiceInterface
 {
@@ -17,17 +16,18 @@ class TransactionTypeService implements TransactionTypeServiceInterface
         $this->transactionTypeRepository = $transactionTypeRepository;
     }
 
-    function findAll(): Collection
+    public function findAll(): Collection
     {
         return $this->transactionTypeRepository->findAll();
     }
 
-    function findById(string $id): ?TransactionType
+    public function findById(string $id): ?TransactionType
     {
         $transactionType = $this->transactionTypeRepository->findById($id);
-        if($transactionType === null) {
-            throw new TransactionTypeNotFound("Tipo de transação não encontrada");
+        if ($transactionType === null) {
+            throw new TransactionTypeNotFound('Tipo de transação não encontrada');
         }
+
         return $transactionType;
     }
 }

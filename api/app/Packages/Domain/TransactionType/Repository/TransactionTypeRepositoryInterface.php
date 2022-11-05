@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 
 interface TransactionTypeRepositoryInterface
 {
-    function findAll(): Collection;
-    function findById(string $id): ?TransactionType;
+    public function findAll(): Collection;
+
+    public function findById(string $id): ?TransactionType;
 }

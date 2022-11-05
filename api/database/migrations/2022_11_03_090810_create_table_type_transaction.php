@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     public function up()
     {
-       DB::statement("
+        DB::statement('
             CREATE TABLE type_transaction(
                 id uuid primary key,
                 description varchar(100) not null,
@@ -17,7 +15,7 @@ return new class extends Migration
                 updated_at timestamp default NOW(),
                 deleted_at timestamp null
             )
-       ");
+       ');
     }
 
     public function down()
