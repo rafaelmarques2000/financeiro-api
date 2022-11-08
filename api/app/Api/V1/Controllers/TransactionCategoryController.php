@@ -6,6 +6,7 @@ use App\Api\V1\Responses\ErrorResponse;
 use App\Api\V1\Responses\TransactionCategoryResponse;
 use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
+use App\Packages\Domain\TransactionCategory\Model\TransactionCategorySearch;
 use App\Packages\Domain\TransactionCategory\Service\TransactionCategoryServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ class TransactionCategoryController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            return response()->json(TransactionCategoryResponse::parseTransactionCategoryList($this->transactionCategoryService->findAll()));
+            $transactionCategorySearch = new TransactionCategorySearch($request->query('transaction_type_id'));
+            return response()->json(TransactionCategoryResponse::parseTransactionCategoryList($this->transactionCategoryService->findAll($transactionCategorySearch)));
         } catch (\Exception $exception) {
             return response()->json(
                 ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),

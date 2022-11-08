@@ -43,7 +43,23 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             join accounts a on t.account_id = a.id
             join type_transaction tt on tc.type_transaction_id = tt.id
             join user_accounts ua on a.id = ua.account_id
-            WHERE t.account_id = ?
+            WHERE t.account_id = ? AND t.deleted_at is null
+    ";
+
+    private const SELECT_AMOUNT_PER_TYPE = "
+            SELECT
+            tt.description,
+            sum(t.amount) as total
+        FROM transaction t
+                 join transaction_categories tc on t.category_id = tc.id
+                 join accounts a on t.account_id = a.id
+                 join type_transaction tt on tc.type_transaction_id = tt.id
+                 join user_accounts ua on a.id = ua.account_id
+        WHERE t.account_id = ?
+          AND ua.user_id = ?
+          AND t.deleted_at is null
+          AND t.date BETWEEN ? AND ?
+        group by tt.description;
     ";
 
     public function findAll(string $userId, string $accountId, TransactionSearch $transactionSearch): TransactionResult
@@ -69,12 +85,16 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             return TransactionMapper::ObjectToTransaction($userId, $transaction);
         });
 
+        $totalAmountPerTransactionType = collect(DB::select(self::SELECT_AMOUNT_PER_TYPE, [
+            $accountId, $userId, $transactionSearch->getInitialDate(), $transactionSearch->getEndDate()]));
+
         return new TransactionResult(
             $this->calculateTotalPages($accountId, $transactionSearch->getLimit()),
             $this->calculateTotalRows($accountId),
             $transactionSearch->getPage(),
             $transactionSearch->getLimit(),
-            $result
+            $result,
+            $totalAmountPerTransactionType
         );
     }
 

@@ -19,6 +19,8 @@ use Illuminate\Support\Collection;
 
 class TransactionController extends Controller
 {
+    const DEFAULT_PAGE = 1;
+    const DEFAULT_LIMIT = 5;
     private TransactionServiceInterface $transactionService;
 
     public function __construct(TransactionServiceInterface $transactionService)
@@ -31,8 +33,8 @@ class TransactionController extends Controller
         try {
             $accountSearch = new TransactionSearch(
                 $request->query('description'),
-                $request->query('page'),
-                $request->query('limit'),
+                $request->query('page') ?? self::DEFAULT_PAGE,
+                $request->query('limit') ?? self::DEFAULT_LIMIT,
                 $request->query('initial_date'),
                 $request->query('end_date'),
             );

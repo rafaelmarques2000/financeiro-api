@@ -19,7 +19,12 @@ class TransactionResponse
             'items' => $transactionResult->getItems()->map(function (Transaction $transaction) {
                 return self::parseTransaction($transaction);
             })->toArray(),
-            'total' => $transactionResult->calculateTotalTransactions() ?? 0
+            'statistic' => $transactionResult->getTransactionStatistic()->map(function ($item) {
+                 return [
+                     'description' => $item->description,
+                     'total' => $item->total /100,
+                 ];
+            })
         ];
     }
 

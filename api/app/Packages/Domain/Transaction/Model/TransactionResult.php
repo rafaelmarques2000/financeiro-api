@@ -16,13 +16,22 @@ class TransactionResult
 
     private Collection $items;
 
-    public function __construct(int $totalPages, int $totalRows, int $currentPage, int $itemPerPage, Collection $items)
+    private Collection $transactionStatistic;
+
+    public function __construct(int $totalPages,
+                                int $totalRows,
+                                int $currentPage,
+                                int $itemPerPage,
+                                Collection $items,
+                                Collection $transactionStatistic
+    )
     {
         $this->totalPages = $totalPages;
         $this->totalRows = $totalRows;
         $this->currentPage = $currentPage;
         $this->itemPerPage = $itemPerPage;
         $this->items = $items;
+        $this->transactionStatistic = $transactionStatistic;
     }
 
     public function getTotalPages(): int
@@ -50,20 +59,8 @@ class TransactionResult
         return $this->items;
     }
 
-    public function calculateTotalTransactions(): ?float
+    public function getTransactionStatistic(): Collection
     {
-        return $this->items->reduce((function($carry, Transaction $value){
-            $total = 0;
-            if($value->getTransactionType()->getSlugName() == "receita") {
-                $total+=$value->getAmount();
-                dump('receita', $total);
-            }
-
-            if($value->getTransactionType()->getSlugName() == "despesa") {
-                $total-=$value->getAmount();
-                dump('despesa', $total);
-            }
-            return ($total) / 100;
-        }));
+        return $this->transactionStatistic;
     }
 }

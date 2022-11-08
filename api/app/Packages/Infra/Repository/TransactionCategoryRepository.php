@@ -3,6 +3,7 @@
 namespace App\Packages\Infra\Repository;
 
 use App\Packages\Domain\TransactionCategory\Model\TransactionCategory;
+use App\Packages\Domain\TransactionCategory\Model\TransactionCategorySearch;
 use App\Packages\Domain\TransactionCategory\Repository\TransactionCategoryRepositoryInterface;
 use App\Packages\Infra\Mapper\TransactionCategoryMapper;
 use Illuminate\Support\Collection;
@@ -21,9 +22,15 @@ class TransactionCategoryRepository implements TransactionCategoryRepositoryInte
             tt on tc.type_transaction_id = tt.id
     ';
 
-    public function findAll(): Collection
+    public function findAll(TransactionCategorySearch $transactionCategorySearch): Collection
     {
-        return collect(DB::select(self::SELECT_TRANSACTION_CATEGORY))->map(function ($transactionCategory) {
+        $query = self::SELECT_TRANSACTION_CATEGORY;
+
+        if($transactionCategorySearch->getTransactionTypeId() != null) {
+            $query.=" WHERE tt.id = '".$transactionCategorySearch->getTransactionTypeId()."'";
+        }
+
+        return collect(DB::select($query))->map(function ($transactionCategory) {
             return TransactionCategoryMapper::ObjectToTransactionCategory($transactionCategory);
         });
     }
