@@ -19,13 +19,43 @@ class TransactionResponse
             'items' => $transactionResult->getItems()->map(function (Transaction $transaction) {
                 return self::parseTransaction($transaction);
             })->toArray(),
-            'statistic' => $transactionResult->getTransactionStatistic()->map(function ($item) {
-                 return [
-                     'description' => $item->description,
-                     'total' => $item->total /100,
-                 ];
-            })
+            'statistic' => self::formatStatistic($transactionResult->getTransactionStatistic())
         ];
+    }
+
+    private static function formatStatistic(Collection $statistic) : array {
+        if($statistic->isEmpty()) {
+            return [
+                [
+                    "description" => "Receita",
+                    "total" => 0
+                ],
+                [
+                    "description" => "Despesa",
+                    "total" => 0
+                ]
+            ];
+        }
+        if($statistic->count() == 1) {
+            $st = $statistic->first();
+            if($st->description == "Receita") {
+                $statistic->add(
+                    [
+                        "description" => "Despesa",
+                        "total" => 0
+                    ]
+                );
+            }else{
+                $statistic->add(
+                    [
+                        "description" => "Receita",
+                        "total" => 0
+                    ]
+                );
+            }
+            return $statistic->toArray();
+        }
+        return $statistic->toArray();
     }
 
     public static function parseTransactionInstallments(Collection $transactionList): array
