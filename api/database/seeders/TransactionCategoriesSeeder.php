@@ -29,7 +29,7 @@ class TransactionCategoriesSeeder extends Seeder
 
     private function getTransactionCategoriesReceita(): Collection
     {
-        $typeCategorieReceita = DB::selectOne('SELECT * FROM type_transaction WHERE slug_name=?', ['despesa']);
+        $typeCategorieReceita = DB::selectOne('SELECT * FROM type_transaction WHERE slug_name=?', ['receita']);
 
         return collect([
             [
