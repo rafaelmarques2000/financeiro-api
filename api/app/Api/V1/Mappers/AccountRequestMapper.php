@@ -14,7 +14,8 @@ class AccountRequestMapper
         return new Account(
             Str::uuid()->toString(),
             $body['description'],
-            $accountType
+            $accountType,
+            null
         );
     }
 

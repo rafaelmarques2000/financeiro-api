@@ -20,4 +20,6 @@ interface TransactionRepositoryInterface
     public function update(string $userId, string $accountId, Transaction $transaction): Transaction;
 
     public function delete(string $userId, string $accountId, string $transactionId): void;
+
+    public function findBalanceTransactionByAccount(string $userId, string $accountId, ?string $initialDate = null, ?string $endDate = null) : Collection;
 }

@@ -201,4 +201,14 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             $transactionId,
         ]);
     }
+
+    public function findBalanceTransactionByAccount(string $userId, string $accountId, ?string $initialDate = null, ?string $endDate = null): Collection
+    {
+         return collect(DB::select(self::SELECT_AMOUNT_PER_TYPE, [
+             $accountId,
+             $userId,
+             $initialDate ?? Carbon::now()->startOfMonth()->format('Y-m-d') ,
+             $endDate ?? Carbon::now()->endOfMonth()->format('Y-m-d')
+         ]));
+    }
 }

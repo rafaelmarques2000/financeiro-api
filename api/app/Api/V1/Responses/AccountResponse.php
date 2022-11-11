@@ -29,6 +29,21 @@ class AccountResponse
     public static function formatAccountResponse(Account $account): array
     {
         $accountType = $account->getAccountType();
+        $balance = $account->getBalance();
+        $amount = 0;
+
+        if($balance != null) {
+
+            if($balance->containsOneItem()) {
+                $amount = ($balance->get(0)->description == "Receita" ? $balance->get(0)->total : ($balance->get(0)->total) * -1) /100 ;
+            }
+
+            if($balance->count() == 2){
+                $receita = $balance->filter(fn($item) => $item->description == "Receita")->first()->total;
+                $despesa = $balance->filter(fn($item) => $item->description == "Despesa")->first()->total;
+                $amount = ($receita - $despesa) /100;
+            }
+        }
 
         return [
             'id' => $account->getId(),
@@ -39,6 +54,7 @@ class AccountResponse
                 'slug_name' => $accountType->getSlugName(),
                 'color' => $accountType->getColor(),
             ],
+            'amount' => $amount,
             'created_at' => Carbon::parse($account->getCreatedAt())->format('d/m/Y H:m'),
             'updated_at' => Carbon::parse($account->getUpdatedAt())->format('d/m/Y H:m'),
         ];

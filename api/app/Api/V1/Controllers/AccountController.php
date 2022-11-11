@@ -35,12 +35,14 @@ class AccountController extends Controller
                 $request->query('description'),
                 $request->query('page'),
                 $request->query('limit'),
+                $request->query('initial_date'),
+                $request->query('end_date'),
             );
 
             return response()->json(AccountResponse::parseAccountList($this->accountService->findAll($userId, $accountSearch)));
         } catch (\Exception $exception) {
             return response()->json(
-                ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                ErrorResponse::parseError($exception->getMessage()),
                 HttpStatus::INTERNAL_SERVER_ERROR->value
             );
         }

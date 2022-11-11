@@ -6,6 +6,7 @@ use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
+use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use App\Packages\Infra\Mapper\AccountRowMapper;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,14 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
                         WHERE u.id = ? AND a.deleted_at is null
                     ';
 
+    private TransactionRepositoryInterface $transactionRepository;
+
+    public function __construct()
+    {
+        $this->transactionRepository = app(TransactionRepositoryInterface::class);
+    }
+
+
     public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
     {
         $query = self::SELECT_ACCOUNT_QUERY;
@@ -51,8 +60,15 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
 
         $query .= 'LIMIT '.$limit.' OFFSET '.$totalLimitRange;
 
-        $result = collect(DB::select($query, [$userId]))->map(function ($account) {
-            return AccountRowMapper::ObjectToAccount($account);
+        $result = collect(DB::select($query, [$userId]))->map(function ($account) use($userId, $accountSearch) {
+            $balance = $this->transactionRepository
+                ->findBalanceTransactionByAccount(
+                    $userId,
+                    $account->id,
+                    $accountSearch->getInitialDate(),
+                    $accountSearch->getEndDate()
+                );
+            return AccountRowMapper::ObjectToAccount($account, $balance);
         });
 
         return new AccountResult(

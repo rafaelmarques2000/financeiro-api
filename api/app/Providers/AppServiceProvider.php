@@ -10,6 +10,7 @@ use App\Packages\Domain\AccountType\Service\AccountTypeService;
 use App\Packages\Domain\AccountType\Service\AccountTypeServiceInterface;
 use App\Packages\Domain\Auth\Service\AuthService;
 use App\Packages\Domain\Auth\Service\AuthServiceInterface;
+use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use App\Packages\Domain\Transaction\Service\TransactionService;
 use App\Packages\Domain\Transaction\Service\TransactionServiceInterface;
 use App\Packages\Domain\TransactionCategory\Repository\TransactionCategoryRepositoryInterface;
@@ -60,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
             return new AuthService($app->make(UserService::class));
         });
 
-        $this->app->bind(AccountRepositoryInterface::class, function () {
+        $this->app->bind(AccountRepositoryInterface::class, function ($app) {
             return new AccountRepository();
         });
 
@@ -92,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
             return new TransactionCategoryService($app->make(TransactionCategoryRepository::class));
         });
 
-        $this->app->bind(TransactionCategoryRepositoryInterface::class, function () {
+        $this->app->bind(TransactionRepositoryInterface::class, function () {
             return new TransactionRepository();
         });
 
