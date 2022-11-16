@@ -59,7 +59,9 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
           AND ua.user_id = ?
           AND t.deleted_at is null
           AND t.date BETWEEN ? AND ?
-        group by tt.description;
+        group by tt.description
+        ORDER BY tt.description DESC 
+        ;
     ";
 
     public function findAll(string $userId, string $accountId, TransactionSearch $transactionSearch): TransactionResult

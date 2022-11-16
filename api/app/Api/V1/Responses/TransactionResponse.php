@@ -38,22 +38,25 @@ class TransactionResponse
         }
         if($statistic->count() == 1) {
             $st = $statistic->first();
+            $newCollection = collect([]);
             if($st->description == "Receita") {
-                $statistic->add(
+                $newCollection->add($st);
+                $newCollection->add(
                     [
                         "description" => "Despesa",
                         "total" => 0
                     ]
                 );
             }else{
-                $statistic->add(
+                $newCollection->add(
                     [
                         "description" => "Receita",
                         "total" => 0
                     ]
                 );
+                $newCollection->add($st);
             }
-            return $statistic->toArray();
+            return $newCollection->toArray();
         }
         return $statistic->toArray();
     }
