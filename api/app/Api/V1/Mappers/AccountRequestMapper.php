@@ -29,6 +29,7 @@ class AccountRequestMapper
             $body['description'],
             $accountType,
             null,
+            Carbon::now()->toDateTimeString(),
             Carbon::now()->toDateTimeString()
         );
     }

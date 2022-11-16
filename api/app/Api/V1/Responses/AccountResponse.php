@@ -5,6 +5,7 @@ namespace App\Api\V1\Responses;
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Date;
 
 class AccountResponse
 {
@@ -55,8 +56,8 @@ class AccountResponse
                 'color' => $accountType->getColor(),
             ],
             'amount' => $amount,
-            'created_at' => Carbon::parse($account->getCreatedAt())->format('d/m/Y H:m'),
-            'updated_at' => Carbon::parse($account->getUpdatedAt())->format('d/m/Y H:m'),
+            'created_at' => $account->getCreatedAt(),
+            'updated_at' => $account->getUpdatedAt()
         ];
     }
 }
