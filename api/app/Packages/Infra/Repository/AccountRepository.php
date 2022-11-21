@@ -94,10 +94,12 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
     {
         DB::beginTransaction();
         try {
-            DB::insert('INSERT INTO accounts(id, description, account_type_id) VALUES (?, ?, ?)', [
+            DB::insert('INSERT INTO accounts(id, description, account_type_id,created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [
                 $account->getId(),
                 $account->getDescription(),
                 $account->getAccountType()->getId(),
+                $account->getCreatedAt(),
+                $account->getUpdatedAt()
             ]);
             DB::insert('INSERT INTO user_accounts(user_id, account_id) VALUES (?, ?)', [
                 $userId,

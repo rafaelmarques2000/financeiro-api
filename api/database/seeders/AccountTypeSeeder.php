@@ -32,7 +32,7 @@ class AccountTypeSeeder extends Seeder
             [
                 'id' => Str::uuid()->toString(),
                 'slugname' => 'conta_corrente',
-                'description' => 'Conta Corrente',
+                'description' => 'Conta corrente',
                 'color' => '#FFB74B',
             ],
             [

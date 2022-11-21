@@ -15,7 +15,9 @@ class AccountRequestMapper
             Str::uuid()->toString(),
             $body['description'],
             $accountType,
-            null
+            null,
+            Carbon::now()->toDateTimeString(),
+            Carbon::now()->toDateTimeString()
         );
     }
 
