@@ -1,6 +1,7 @@
 <?php
 
 use App\Api\V1\Controllers\AccountController;
+use App\Api\V1\Controllers\AccountStatisticController;
 use App\Api\V1\Controllers\AccountTypeController;
 use App\Api\V1\Controllers\AuthController;
 use App\Api\V1\Controllers\TransactionCategoryController;
@@ -13,7 +14,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth', [AuthController::class, 'auth']);
 Route::post('/check-token', [AuthController::class, 'checkJWTToken']);
 
+
+
 //Route::middleware(JwtAuthGuard::class)->group(function () {
+Route::get("/users/{user}/accounts/statistics", [AccountStatisticController::class, 'getPeriodResult']);
+Route::get("/users/{user}/accounts/{account}/statistics", [AccountStatisticController::class, 'getPeriodResultByAccount']);
+
 Route::resources([
     'users' => UserController::class,
     'users.accounts' => AccountController::class,

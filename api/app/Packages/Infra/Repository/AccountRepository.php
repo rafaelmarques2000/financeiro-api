@@ -9,6 +9,7 @@ use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
 use App\Packages\Infra\Mapper\AccountRowMapper;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class AccountRepository extends AbstractPaginatedRepository implements AccountRepositoryInterface
@@ -46,7 +47,19 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
         $this->transactionRepository = app(TransactionRepositoryInterface::class);
     }
 
-
+    public function findAllByUserId(string $userId, string $initialDate, string $endDate): Collection
+    {
+        return collect(DB::select(self::SELECT_ACCOUNT_QUERY, [$userId]))->map(function ($account) use($userId, $initialDate, $endDate) {
+            $balance = $this->transactionRepository
+                ->getBalanceByAccount(
+                    $userId,
+                    $account->id,
+                    $initialDate,
+                    $endDate
+                );
+            return AccountRowMapper::ObjectToAccount($account, $balance);
+        });
+}
     public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
     {
         $query = self::SELECT_ACCOUNT_QUERY;
@@ -62,7 +75,7 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
 
         $result = collect(DB::select($query, [$userId]))->map(function ($account) use($userId, $accountSearch) {
             $balance = $this->transactionRepository
-                ->findBalanceTransactionByAccount(
+                ->getBalanceByAccount(
                     $userId,
                     $account->id,
                     $accountSearch->getInitialDate(),

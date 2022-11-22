@@ -88,4 +88,9 @@ class TransactionService implements TransactionServiceInterface
     {
         return $this->transactionRepository->findById($userId, $accountId, $transactionId) != null;
     }
+
+    public function getBalanceByAccount(string $userId, string $accountId, string $initialDate, string $endDate): Collection
+    {
+        return $this->transactionRepository->getBalanceByAccount($userId, $accountId, $initialDate, $endDate);
+    }
 }

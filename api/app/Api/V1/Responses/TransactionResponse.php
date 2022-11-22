@@ -18,47 +18,8 @@ class TransactionResponse
             'items_per_page' => $transactionResult->getItemPerPage(),
             'items' => $transactionResult->getItems()->map(function (Transaction $transaction) {
                 return self::parseTransaction($transaction);
-            })->toArray(),
-            'statistic' => self::formatStatistic($transactionResult->getTransactionStatistic())
+            })->toArray()
         ];
-    }
-
-    private static function formatStatistic(Collection $statistic) : array {
-        if($statistic->isEmpty()) {
-            return [
-                [
-                    "description" => "Receita",
-                    "total" => 0
-                ],
-                [
-                    "description" => "Despesa",
-                    "total" => 0
-                ]
-            ];
-        }
-        if($statistic->count() == 1) {
-            $st = $statistic->first();
-            $newCollection = collect([]);
-            if($st->description == "Receita") {
-                $newCollection->add($st);
-                $newCollection->add(
-                    [
-                        "description" => "Despesa",
-                        "total" => 0
-                    ]
-                );
-            }else{
-                $newCollection->add(
-                    [
-                        "description" => "Receita",
-                        "total" => 0
-                    ]
-                );
-                $newCollection->add($st);
-            }
-            return $newCollection->toArray();
-        }
-        return $statistic->toArray();
     }
 
     public static function parseTransactionInstallments(Collection $transactionList): array

@@ -60,7 +60,7 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
           AND t.deleted_at is null
           AND t.date BETWEEN ? AND ?
         group by tt.description
-        ORDER BY tt.description DESC 
+        ORDER BY tt.description DESC
         ;
     ";
 
@@ -87,16 +87,14 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             return TransactionMapper::ObjectToTransaction($userId, $transaction);
         });
 
-        $totalAmountPerTransactionType = collect(DB::select(self::SELECT_AMOUNT_PER_TYPE, [
-            $accountId, $userId, $transactionSearch->getInitialDate(), $transactionSearch->getEndDate()]));
+
 
         return new TransactionResult(
             $this->calculateTotalPages($accountId, $transactionSearch->getLimit()),
             $this->calculateTotalRows($accountId),
             $transactionSearch->getPage(),
             $transactionSearch->getLimit(),
-            $result,
-            $totalAmountPerTransactionType
+            $result
         );
     }
 
@@ -204,7 +202,7 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
         ]);
     }
 
-    public function findBalanceTransactionByAccount(string $userId, string $accountId, ?string $initialDate = null, ?string $endDate = null): Collection
+    public function getBalanceByAccount(string $userId, ?string $accountId = null, ?string $initialDate = null, ?string $endDate = null): Collection
     {
          return collect(DB::select(self::SELECT_AMOUNT_PER_TYPE, [
              $accountId,

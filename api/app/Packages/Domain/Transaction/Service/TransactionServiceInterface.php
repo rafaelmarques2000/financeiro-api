@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 
 interface TransactionServiceInterface
 {
+    public function getBalanceByAccount(string $userId , string $accountId, string $initialDate, string $endDate): Collection;
+
     public function findAll(string $userId, string $accountId, TransactionSearch $transactionSearch): TransactionResult;
 
     public function findById(string $userId, string $accountId, string $transactionId): Transaction;

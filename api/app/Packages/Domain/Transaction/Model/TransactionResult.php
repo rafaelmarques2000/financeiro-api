@@ -16,14 +16,11 @@ class TransactionResult
 
     private Collection $items;
 
-    private Collection $transactionStatistic;
-
     public function __construct(int $totalPages,
                                 int $totalRows,
                                 int $currentPage,
                                 int $itemPerPage,
-                                Collection $items,
-                                Collection $transactionStatistic
+                                Collection $items
     )
     {
         $this->totalPages = $totalPages;
@@ -31,7 +28,6 @@ class TransactionResult
         $this->currentPage = $currentPage;
         $this->itemPerPage = $itemPerPage;
         $this->items = $items;
-        $this->transactionStatistic = $transactionStatistic;
     }
 
     public function getTotalPages(): int
@@ -57,10 +53,5 @@ class TransactionResult
     public function getItems(): Collection
     {
         return $this->items;
-    }
-
-    public function getTransactionStatistic(): Collection
-    {
-        return $this->transactionStatistic;
     }
 }

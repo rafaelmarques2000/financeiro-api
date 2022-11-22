@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Packages\Domain\Account\Repository\AccountRepositoryInterface;
 use App\Packages\Domain\Account\Service\AccountService;
 use App\Packages\Domain\Account\Service\AccountServiceInterface;
+use App\Packages\Domain\Account\Service\AccountStatisticService;
+use App\Packages\Domain\Account\Service\AccountStatisticServiceInterface;
 use App\Packages\Domain\AccountType\Repository\AccountTypeRepositoryInterface;
 use App\Packages\Domain\AccountType\Service\AccountTypeService;
 use App\Packages\Domain\AccountType\Service\AccountTypeServiceInterface;
@@ -49,6 +51,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->loadProductionBindsInterfaces();
+    }
+
+
+    public function loadProductionBindsInterfaces(): void
+    {
         $this->app->bind(UserRepositoryInterface::class, function () {
             return new UserRepository();
         });
@@ -66,7 +74,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(AccountServiceInterface::class, function ($app) {
-            return new AccountService($app->make(AccountRepository::class));
+            return new AccountService(
+                $app->make(AccountRepository::class),
+                $app->make(TransactionService::class),
+            );
         });
 
         $this->app->bind(AccountTypeRepositoryInterface::class, function () {
@@ -99,6 +110,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(TransactionServiceInterface::class, function ($app) {
             return new TransactionService($app->make(TransactionRepository::class));
+        });
+
+        $this->app->bind(AccountStatisticServiceInterface::class, function ($app) {
+            return new AccountStatisticService($app->make(AccountService::class));
         });
     }
 }
