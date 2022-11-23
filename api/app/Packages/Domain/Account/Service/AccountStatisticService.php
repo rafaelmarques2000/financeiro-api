@@ -2,11 +2,9 @@
 
 namespace App\Packages\Domain\Account\Service;
 
-use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountGeneralStatistic;
 use App\Packages\Domain\Account\Model\AccountStatisticSearch;
 use App\Packages\Domain\Account\Model\AccountTransactionsStatistic;
-use PhpParser\Node\Expr\Cast\Object_;
 
 class AccountStatisticService implements AccountStatisticServiceInterface
 {
@@ -43,6 +41,7 @@ class AccountStatisticService implements AccountStatisticServiceInterface
     public function getByPeriodAndAccountId(string $userId, string $accountId, AccountStatisticSearch $accountStatisticSearch): AccountTransactionsStatistic
     {
         $balance = $this->accountService->getBalanceById($userId, $accountId, $accountStatisticSearch->getInitialDate(), $accountStatisticSearch->getEndDate());
+
         $revenue = 0;
         $expense = 0;
         $balance->each(function(Object $balance) use(&$revenue, &$expense) {

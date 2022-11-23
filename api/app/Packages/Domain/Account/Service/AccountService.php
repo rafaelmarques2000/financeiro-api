@@ -71,7 +71,7 @@ class AccountService implements AccountServiceInterface
         $this->accountRepository->delete($userId, $account);
     }
 
-    public function hasAccount(string $userId, Account $account): ?Account
+    private function hasAccount(string $userId, Account $account): ?Account
     {
         return $this->accountRepository->findById($userId, $account->getId());
     }

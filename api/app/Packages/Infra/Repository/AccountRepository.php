@@ -141,9 +141,21 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
 
     public function delete(string $userId, Account $account): void
     {
-        DB::update('UPDATE accounts SET deleted_at = ? WHERE id=?', [
-            $account->getDeletedAt(),
-            $account->getId(),
-        ]);
+        DB::beginTransaction();
+        try {
+            DB::update('UPDATE accounts SET deleted_at = ? WHERE id=?', [
+                $account->getDeletedAt(),
+                $account->getId(),
+            ]);
+
+            DB::update('UPDATE transaction SET deleted_at = ? WHERE account_id=?', [
+                $account->getDeletedAt(),
+                $account->getId(),
+            ]);
+            DB::commit();
+        }catch (\Exception $exception) {
+            DB::rollBack();
+            throw new Exception($exception->getMessage());
+        }
     }
 }

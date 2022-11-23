@@ -8,6 +8,7 @@ use App\Packages\Domain\User\Service\UserServiceInterface;
 use Closure;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use UnexpectedValueException;
 
@@ -24,7 +25,7 @@ class JwtAuthGuard
 
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->headers->has($this->AUTORIZATION_HEADER)) {
+        if (!$request->headers->has($this->AUTORIZATION_HEADER)) {
             return $this->unauthorizedResponse();
         }
 
@@ -37,14 +38,13 @@ class JwtAuthGuard
         try {
             $payload = JWT::decode($token[1], new Key(env('JWT_SECRET'), env('JWT_ALGO')));
             $this->userService->findById($payload->sub);
-
             return $next($request);
         } catch (AccountNotFoundException|UnexpectedValueException $exception) {
             return $this->unauthorizedResponse();
         }
     }
 
-    public function unauthorizedResponse(): \Illuminate\Http\JsonResponse
+    public function unauthorizedResponse(): JsonResponse
     {
         return response()->json(ErrorResponse::parseError('Não autorizado'), 401);
     }
