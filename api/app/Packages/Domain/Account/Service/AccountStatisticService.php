@@ -2,9 +2,12 @@
 
 namespace App\Packages\Domain\Account\Service;
 
+use App\Packages\Domain\Account\Enum\AccountTypeEnum;
+use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountGeneralStatistic;
 use App\Packages\Domain\Account\Model\AccountStatisticSearch;
 use App\Packages\Domain\Account\Model\AccountTransactionsStatistic;
+use App\Packages\Domain\TransactionType\Enum\TransactionTypeEnum;
 
 class AccountStatisticService implements AccountStatisticServiceInterface
 {
@@ -21,19 +24,22 @@ class AccountStatisticService implements AccountStatisticServiceInterface
 
         $revenue = 0;
         $expense = 0;
-        $accounts->each(function(Object $account) use(&$revenue, &$expense) {
+        $accounts->each(function(Account $account) use(&$revenue, &$expense) {
 
-            $filterRevenue = $account->getBalance()->filter(fn($item) => $item->description == "Receita")->first();
-            $filterExpense = $account->getBalance()->filter(fn($item) => $item->description == "Despesa")->first();
+          if($account->getAccountType()->getSlugName() !== AccountTypeEnum::POUPANCA_RESERVA->value) {
+              $filterRevenue = $account->getBalance()->filter(fn($item) => $item->description == TransactionTypeEnum::RECEITA->value)->first();
+              $filterExpense = $account->getBalance()->filter(fn($item) => $item->description == TransactionTypeEnum::DESPESA->value)->first();
 
-            if($filterRevenue != null) {
-                $revenue+=$filterRevenue->total;
-            }
+              if ($filterRevenue != null) {
+                  $revenue += $filterRevenue->total;
+              }
 
-            if($filterExpense != null) {
-                $expense+=$filterExpense->total;
-            }
+              if ($filterExpense != null) {
+                  $expense += $filterExpense->total;
+              }
+          }
         });
+
         $amount = $revenue - $expense;
         return new AccountGeneralStatistic($amount);
     }
@@ -46,11 +52,11 @@ class AccountStatisticService implements AccountStatisticServiceInterface
         $expense = 0;
         $balance->each(function(Object $balance) use(&$revenue, &$expense) {
 
-            if($balance->description == "Receita") {
+            if($balance->description == TransactionTypeEnum::RECEITA->value) {
                 $revenue+=$balance->total;
             }
 
-            if($balance->description == "Despesa") {
+            if($balance->description == TransactionTypeEnum::DESPESA->value) {
                 $expense+=$balance->total;
             }
         });

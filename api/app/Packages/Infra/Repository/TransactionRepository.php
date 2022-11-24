@@ -54,6 +54,7 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
                  join transaction_categories tc on t.category_id = tc.id
                  join accounts a on t.account_id = a.id
                  join type_transaction tt on t.transaction_type_id = tt.id
+                 join account_types at on a.account_type_id = at.id
                  join user_accounts ua on a.id = ua.account_id
         WHERE t.account_id = ?
           AND ua.user_id = ?
