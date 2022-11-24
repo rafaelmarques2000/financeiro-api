@@ -3,6 +3,7 @@
 namespace App\Packages\Domain\Account\Service;
 
 use App\Packages\Domain\Account\Exception\AccountNotFoundException;
+use App\Packages\Domain\Account\Model\AbstractAccountSearch;
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use App\Packages\Domain\Account\Model\AccountSearch;
@@ -27,12 +28,12 @@ class AccountService implements AccountServiceInterface
         return $this->transactionService->getBalanceByAccount($userId, $accountId, $initialDate, $endDate);
     }
 
-    public function findAllByUserId(string $userId, string $initialDate, string $endDate): Collection
+    public function findAllByUserId(string $userId, AbstractAccountSearch $accountSearch): Collection
     {
-        return $this->accountRepository->findAllByUserId($userId, $initialDate, $endDate);
+        return $this->accountRepository->findAllByUserId($userId, $accountSearch);
     }
 
-    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
+    public function findAll(string $userId, AbstractAccountSearch $accountSearch): AccountResult
     {
         return $this->accountRepository->findAll($userId, $accountSearch);
     }

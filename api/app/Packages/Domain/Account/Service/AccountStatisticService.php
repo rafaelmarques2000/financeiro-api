@@ -3,8 +3,10 @@
 namespace App\Packages\Domain\Account\Service;
 
 use App\Packages\Domain\Account\Enum\AccountTypeEnum;
+use App\Packages\Domain\Account\Model\AbstractAccountSearch;
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountGeneralStatistic;
+use App\Packages\Domain\Account\Model\AccountSearch;
 use App\Packages\Domain\Account\Model\AccountStatisticSearch;
 use App\Packages\Domain\Account\Model\AccountTransactionsStatistic;
 use App\Packages\Domain\TransactionType\Enum\TransactionTypeEnum;
@@ -18,15 +20,13 @@ class AccountStatisticService implements AccountStatisticServiceInterface
         $this->accountService = $accountService;
     }
 
-    public function getByPeriod(string $userId, AccountStatisticSearch $accountStatisticSearch): AccountGeneralStatistic
+    public function getByPeriod(string $userId, AbstractAccountSearch $accountStatisticSearch): AccountGeneralStatistic
     {
-        $accounts = $this->accountService->findAllByUserId($userId, $accountStatisticSearch->getInitialDate(), $accountStatisticSearch->getEndDate());
+        $accounts = $this->accountService->findAllByUserId($userId, $accountStatisticSearch);
 
         $revenue = 0;
         $expense = 0;
         $accounts->each(function(Account $account) use(&$revenue, &$expense) {
-
-          if($account->getAccountType()->getSlugName() !== AccountTypeEnum::POUPANCA_RESERVA->value) {
               $filterRevenue = $account->getBalance()->filter(fn($item) => $item->description == TransactionTypeEnum::RECEITA->value)->first();
               $filterExpense = $account->getBalance()->filter(fn($item) => $item->description == TransactionTypeEnum::DESPESA->value)->first();
 
@@ -37,7 +37,6 @@ class AccountStatisticService implements AccountStatisticServiceInterface
               if ($filterExpense != null) {
                   $expense += $filterExpense->total;
               }
-          }
         });
 
         $amount = $revenue - $expense;

@@ -2,6 +2,7 @@
 
 namespace App\Packages\Domain\Account\Service;
 
+use App\Packages\Domain\Account\Model\AbstractAccountSearch;
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use App\Packages\Domain\Account\Model\AccountSearch;
@@ -11,9 +12,9 @@ interface AccountServiceInterface
 {
     public function getBalanceById(string $userId, string $accountId, string $initialDate, string $endDate): Collection;
 
-    public function findAllByUserId(string $userId, string $initialDate, string $endDate): Collection;
+    public function findAllByUserId(string $userId, AbstractAccountSearch $accountSearch): Collection;
 
-    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult;
+    public function findAll(string $userId, AbstractAccountSearch $accountSearch): AccountResult;
 
     public function findById(string $userId, string $accountId): Account;
 

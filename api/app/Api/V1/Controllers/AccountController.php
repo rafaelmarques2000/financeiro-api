@@ -32,11 +32,12 @@ class AccountController extends Controller
     {
         try {
             $accountSearch = new AccountSearch(
-                $request->query('description'),
                 $request->query('page'),
                 $request->query('limit'),
+                $request->query('description'),
                 $request->query('initial_date'),
                 $request->query('end_date'),
+                $request->query('account_types')
             );
 
             return response()->json(AccountResponse::parseAccountList($this->accountService->findAll($userId, $accountSearch)));

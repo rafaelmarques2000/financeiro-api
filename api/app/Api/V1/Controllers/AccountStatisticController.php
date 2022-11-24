@@ -34,6 +34,7 @@ class AccountStatisticController extends Controller
              $accountStatisticSearch = new AccountStatisticSearch(
                  $request->query('initial_date'),
                  $request->query('end_date'),
+                 $request->query("account_types")
              );
 
              return response()->json(AccountStatisticResponse::parse($this->accountStatisticService
@@ -52,6 +53,7 @@ class AccountStatisticController extends Controller
             $accountStatisticSearch = new AccountStatisticSearch(
                 $request->query('initial_date'),
                 $request->query('end_date'),
+                $request->query("account_types")
             );
 
             return response()->json(AccountStatisticResponse::parseAccountBalance($this->accountStatisticService

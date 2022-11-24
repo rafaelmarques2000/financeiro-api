@@ -2,31 +2,25 @@
 
 namespace App\Packages\Domain\Account\Model;
 
-class AccountSearch
+class AccountSearch extends AbstractAccountSearch
 {
+    private int $page;
+    private int $limit;
     private ?string $description;
 
-    private int $page;
-
-    private int $limit;
-
-    private ?string $initialDate;
-
-    private ?string $endDate;
-
-    public function __construct(?string $description, int $page, int $limit, ?string $initialDate, ?string $endDate)
+    public function __construct(
+        int $page,
+        int $limit,
+        ?string $description,
+        ?string $initialDate,
+        ?string $endDate,
+        ?array $accountTypes
+    )
     {
-        $this->description = $description;
         $this->page = $page;
         $this->limit = $limit;
-        $this->initialDate = $initialDate;
-        $this->endDate = $endDate;
-    }
-
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
+        $this->description = $description;
+        parent::__construct($initialDate, $endDate, $accountTypes);
     }
 
     public function getPage(): int
@@ -39,13 +33,8 @@ class AccountSearch
         return $this->limit;
     }
 
-    public function getInitialDate(): ?string
+    public function getDescription(): ?string
     {
-        return $this->initialDate;
-    }
-
-    public function getEndDate(): ?string
-    {
-        return $this->endDate;
+        return $this->description;
     }
 }

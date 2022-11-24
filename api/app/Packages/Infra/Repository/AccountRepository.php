@@ -2,6 +2,7 @@
 
 namespace App\Packages\Infra\Repository;
 
+use App\Packages\Domain\Account\Model\AbstractAccountSearch;
 use App\Packages\Domain\Account\Model\Account;
 use App\Packages\Domain\Account\Model\AccountResult;
 use App\Packages\Domain\Account\Model\AccountSearch;
@@ -47,25 +48,37 @@ class AccountRepository extends AbstractPaginatedRepository implements AccountRe
         $this->transactionRepository = app(TransactionRepositoryInterface::class);
     }
 
-    public function findAllByUserId(string $userId, string $initialDate, string $endDate): Collection
+    public function findAllByUserId(string $userId, AbstractAccountSearch $accountSearch): Collection
     {
-        return collect(DB::select(self::SELECT_ACCOUNT_QUERY, [$userId]))->map(function ($account) use($userId, $initialDate, $endDate) {
+        $query = self::SELECT_ACCOUNT_QUERY;
+
+        if($accountSearch->getAccountTypes() != null) {
+            $query.= " AND t.slug_name IN(".$accountSearch->getAccountTypesFormatted().")" ;
+        }
+
+        return collect(DB::select($query, [$userId]))->map(function ($account) use($userId, $accountSearch) {
             $balance = $this->transactionRepository
                 ->getBalanceByAccount(
                     $userId,
                     $account->id,
-                    $initialDate,
-                    $endDate
+                    $accountSearch->getInitialDate(),
+                    $accountSearch->getEndDate()
                 );
             return AccountRowMapper::ObjectToAccount($account, $balance);
         });
 }
-    public function findAll(string $userId, AccountSearch $accountSearch): AccountResult
+    public function findAll(string $userId, AbstractAccountSearch $accountSearch): AccountResult
     {
         $query = self::SELECT_ACCOUNT_QUERY;
+
         if ($accountSearch->getDescription() != null) {
             $query .= "AND a.description ILIKE '%".$accountSearch->getDescription()."%'";
             $this->countQuery .= "AND a.description ILIKE '%".$accountSearch->getDescription()."%'";
+        }
+
+        if($accountSearch->getAccountTypes() != null) {
+            $query .= "AND t.slug_name IN(".$accountSearch->getAccountTypesFormatted().")";
+            $this->countQuery .= "AND t.slug_name IN(".$accountSearch->getAccountTypesFormatted().")";
         }
 
         $totalLimitRange = $this->calculateLimitOffset($accountSearch->getLimit(), $accountSearch->getPage());
