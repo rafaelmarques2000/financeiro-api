@@ -82,7 +82,7 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
         $totalLimitRange = $this->calculateLimitOffset($transactionSearch->getLimit(), $transactionSearch->getPage());
         $limit = $transactionSearch->getLimit();
 
-        $query .= ' ORDER BY t.date DESC LIMIT '.$limit.' OFFSET '.$totalLimitRange;
+        $query .= ' ORDER BY t.date ASC LIMIT '.$limit.' OFFSET '.$totalLimitRange;
 
         $result = collect(DB::select($query, [$accountId, $userId]))->map(function ($transaction) use ($userId) {
             return TransactionMapper::ObjectToTransaction($userId, $transaction);
