@@ -3,6 +3,7 @@
 namespace App\Packages\Infra\Mapper;
 
 use App\Packages\Domain\Dashboard\Model\ExpenseCategory;
+use App\Packages\Domain\Dashboard\Model\InvoiceReport;
 
 class DashboardRowMapper
 {
@@ -12,4 +13,12 @@ class DashboardRowMapper
               $expenseCategory->amount / 100
           );
      }
+
+    public static function objectToInvoiceReport(object $invoice): InvoiceReport {
+        return new InvoiceReport(
+            $invoice->month,
+            $invoice->year,
+            $invoice->total / 100
+        );
+    }
 }

@@ -114,8 +114,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
     {
         DB::insert(
             'INSERT INTO transaction (id, description, date, category_id, account_id, amount, installments,
-                                amount_installments, current_installment, transaction_type_id, created_at, updated_at)
-                                VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?)',
+                                amount_installments, current_installment, transaction_type_id, created_at, updated_at, month, year)
+                                VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?,?)',
             [
                 $transaction->getId(),
                 $transaction->getDescription(),
@@ -129,6 +129,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
                 $transaction->getTransactionType()->getId(),
                 $transaction->getCreatedAt(),
                 $transaction->getUpdatedAt(),
+                $transaction->getDate()->format('m'),
+                $transaction->getDate()->format('Y'),
             ]
         );
 
@@ -142,8 +144,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
             $transactions->each(function (Transaction $transaction) {
                 DB::insert(
                     'INSERT INTO transaction (id, description, date, category_id, account_id, amount, installments,
-                                amount_installments, current_installment, transaction_type_id, created_at, updated_at)
-                                VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?)',
+                                amount_installments, current_installment, transaction_type_id, created_at, updated_at, month, year)
+                                VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?,?,?,?,?)',
                     [
                         $transaction->getId(),
                         $transaction->getDescription(),
@@ -157,6 +159,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
                         $transaction->getTransactionType()->getId(),
                         $transaction->getCreatedAt(),
                         $transaction->getUpdatedAt(),
+                        $transaction->getDate()->format('m'),
+                        $transaction->getDate()->format('Y')
                     ]
                 );
             });
@@ -171,6 +175,8 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
 
     public function update(string $userId, string $accountId, Transaction $transaction): Transaction
     {
+        $updateAt = Carbon::now();
+
         $query = DB::update("UPDATE transaction SET
                        description=?,
                        date=?,
@@ -178,7 +184,9 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
                        account_id=?,
                        amount = ?,
                        transaction_type_id = ?,
-                       updated_at = ?
+                       updated_at = ?,
+                       month = ?,
+                       year = ?
                        WHERE account_id = ? AND id = ?
                        ", [
                            $transaction->getDescription(),
@@ -187,7 +195,9 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
                            $transaction->getAccount()->getId(),
                            $transaction->getAmount(),
                            $transaction->getTransactionType()->getId(),
-                           Carbon::now(),
+                           $updateAt,
+                           $transaction->getDate()->format('m'),
+                           $transaction->getDate()->format('Y'),
                            $accountId,
                            $transaction->getId()
                           ]);

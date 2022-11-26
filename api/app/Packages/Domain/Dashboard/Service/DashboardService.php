@@ -33,4 +33,9 @@ class DashboardService implements DashboardServiceInterface
              );
         });
     }
+
+    public function getInvoiceReport(string $userId, DashboardSearch $dashboardSearch): Collection
+    {
+        return $this->dashboardRepository->getInvoiceReport($userId, $dashboardSearch);
+    }
 }

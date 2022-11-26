@@ -25,6 +25,7 @@ Route::post('/check-token', [AuthController::class, 'checkJWTToken']);
 
     //dashboard
     Route::get("/users/{user}/dashboard/expense-per-category", [DashboardController::class, 'getExpensePerCategory']);
+    Route::get("/users/{user}/dashboard/invoice-report", [DashboardController::class, 'getInvoiceReport']);
 
     Route::resources([
         'users' => UserController::class,

@@ -3,6 +3,7 @@
 namespace App\Api\V1\Responses;
 
 use App\Packages\Domain\Dashboard\Model\ExpenseCategory;
+use App\Packages\Domain\Dashboard\Model\InvoiceReport;
 use Illuminate\Support\Collection;
 
 class DashboardResponse
@@ -14,4 +15,11 @@ class DashboardResponse
             'percentage' => $expenseCategory->getPercentage()
         ])->toArray();
       }
+
+    public static function parseInvoiceReport(Collection $invoice): array {
+        return $invoice->map(fn(InvoiceReport $invoiceReport) => [
+            'month' => $invoiceReport->getShortNameMonth(),
+            'amount' => $invoiceReport->getTotal()
+        ])->toArray();
+    }
 }

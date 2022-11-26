@@ -8,5 +8,5 @@ use Illuminate\Support\Collection;
 interface DashboardRepositoryInterface
 {
     public function getExpensePerCategory(string $userId, DashboardSearch $dashboardSearch): Collection;
-
+    public function getInvoiceReport(string $userId, DashboardSearch $dashboardSearch): Collection;
 }

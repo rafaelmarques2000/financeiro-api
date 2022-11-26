@@ -20,7 +20,6 @@ class DashboardController extends Controller
         $this->dashboardService = $dashboardService;
     }
 
-
     public function getExpensePerCategory(Request $request, string $userId): JsonResponse {
         try{
             $dashboardSearch = new DashboardSearch(
@@ -34,6 +33,24 @@ class DashboardController extends Controller
         }catch (\Exception $exception) {
             return response()->json(
                 ErrorResponse::parseError('Falha interna do servidor, tente novamente ou contate o administrador'),
+                HttpStatus::INTERNAL_SERVER_ERROR->value
+            );
+        }
+    }
+
+    public function getInvoiceReport(Request $request, string $userId): JsonResponse {
+        try{
+            $dashboardSearch = new DashboardSearch(
+                $request->query('initial_date'),
+                $request->query('end_date')
+            );
+
+            return response()->json(DashboardResponse::parseInvoiceReport($this
+                ->dashboardService
+                ->getInvoiceReport($userId, $dashboardSearch)));
+        }catch (\Exception $exception) {
+            return response()->json(
+                ErrorResponse::parseError($exception->getMessage()),
                 HttpStatus::INTERNAL_SERVER_ERROR->value
             );
         }
