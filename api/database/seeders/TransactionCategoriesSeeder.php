@@ -23,6 +23,12 @@ class TransactionCategoriesSeeder extends Seeder
                         $item['type_transaction_id'],
                         $item['slugname'],
                     ]);
+                }else{
+                    DB::update('UPDATE transaction_categories SET description=?, type_transaction_id=? WHERE slug_name = ?',[
+                       $item['description'],
+                       $item['type_transaction_id'],
+                       $item['slugname']
+                    ]);
                 }
             });
     }
@@ -156,7 +162,7 @@ class TransactionCategoriesSeeder extends Seeder
             ],
             [
                 'id' => Str::uuid()->toString(),
-                'description' => 'Serviços contratos',
+                'description' => 'Serviços contratados',
                 'slugname' => 'servicos_contratados',
                 'type_transaction_id' => $typeCategorieDespesa->id,
             ],
@@ -170,6 +176,18 @@ class TransactionCategoriesSeeder extends Seeder
                 'id' => Str::uuid()->toString(),
                 'description' => 'Ajuste de saldo',
                 'slugname' => 'ajuste_saldo',
+                'type_transaction_id' => $typeCategorieDespesa->id,
+            ],
+            [
+                'id' => Str::uuid()->toString(),
+                'description' => 'Despesa financeira',
+                'slugname' => 'despesa_financeira',
+                'type_transaction_id' => $typeCategorieDespesa->id,
+            ],
+            [
+                'id' => Str::uuid()->toString(),
+                'description' => 'Outros',
+                'slugname' => 'outros',
                 'type_transaction_id' => $typeCategorieDespesa->id,
             ],
         ]);
