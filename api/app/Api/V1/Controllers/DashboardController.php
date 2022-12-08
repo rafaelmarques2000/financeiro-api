@@ -42,7 +42,8 @@ class DashboardController extends Controller
         try{
             $dashboardSearch = new DashboardSearch(
                 $request->query('initial_date'),
-                $request->query('end_date')
+                $request->query('end_date'),
+                $request->query('competence_year'),
             );
 
             return response()->json(DashboardResponse::parseInvoiceReport($this

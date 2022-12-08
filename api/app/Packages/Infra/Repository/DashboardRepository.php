@@ -52,11 +52,11 @@ class DashboardRepository implements DashboardRepositoryInterface
                             join users u on ua.user_id = u.id
                    where tt.slug_name = 'despesa'
                      and t.deleted_at is null
-                     and at2.slug_name = 'cartao_credito'
+                     and at2.slug_name IN('cartao_credito', 'conta_corrente')
                      and u.id = ?
        group by t.month, t.year), invoice AS (
                         select month, year, (revenue - expense) as total from report
-                   )SELECT * from invoice
+                   )SELECT * from invoice WHERE total is NOT NULL AND year = ?
     ";
 
     public function getExpensePerCategory(string $userId, DashboardSearch $dashboardSearch): Collection
@@ -72,7 +72,8 @@ class DashboardRepository implements DashboardRepositoryInterface
     {
         return collect(DB::select(self::SELECT_INVOICE_REPORT, [
             $userId,
-            $userId
+            $userId,
+            $dashboardSearch->getCompetenceYear()
         ]))->map(fn($item) => DashboardRowMapper::objectToInvoiceReport($item));
     }
 }
