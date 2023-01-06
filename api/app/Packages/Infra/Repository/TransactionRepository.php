@@ -3,6 +3,7 @@
 namespace App\Packages\Infra\Repository;
 
 use App\Packages\Domain\Transaction\Model\Transaction;
+use App\Packages\Domain\Transaction\Model\TransactionCriteria;
 use App\Packages\Domain\Transaction\Model\TransactionResult;
 use App\Packages\Domain\Transaction\Model\TransactionSearch;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
@@ -221,5 +222,22 @@ class TransactionRepository extends AbstractPaginatedRepository implements Trans
              $initialDate ?? Carbon::now()->startOfMonth()->format('Y-m-d') ,
              $endDate ?? Carbon::now()->endOfMonth()->format('Y-m-d')
          ]));
+    }
+
+    public function findByCriteria(string $userId, TransactionCriteria $criteria): Collection
+    {
+        $query = self::SELECT_QUERY. "WHERE ua.user_id=? AND t.deleted_at is null";
+
+        if($criteria->getInitialDate() != null && $criteria->getEndDate() != null) {
+            $query .= " AND t.date BETWEEN '".$criteria->getInitialDate()."' AND '".$criteria->getEndDate()."'";
+         }
+
+         if($criteria->getCategoryId() != null) {
+             $query.=" AND t.category_id='".$criteria->getCategoryId()."'";
+         }
+
+        return collect(DB::select($query, [$userId]))->map(function ($transaction) use ($userId) {
+            return TransactionMapper::ObjectToTransaction($userId, $transaction);
+        });
     }
 }

@@ -4,6 +4,7 @@ namespace App\Packages\Domain\Transaction\Service;
 
 use App\Packages\Domain\Transaction\Exception\TransactionNotFoundException;
 use App\Packages\Domain\Transaction\Model\Transaction;
+use App\Packages\Domain\Transaction\Model\TransactionCriteria;
 use App\Packages\Domain\Transaction\Model\TransactionResult;
 use App\Packages\Domain\Transaction\Model\TransactionSearch;
 use App\Packages\Domain\Transaction\Repository\TransactionRepositoryInterface;
@@ -31,6 +32,11 @@ class TransactionService implements TransactionServiceInterface
             throw new TransactionNotFoundException('Transação não encontrada');
         }
         return $this->transactionRepository->findById($userId, $accountId, $transactionId);
+    }
+
+    public function findByCriteria(string $userId, TransactionCriteria $criteria): Collection
+    {
+        return $this->transactionRepository->findByCriteria($userId, $criteria);
     }
 
     public function create(string $userId, string $accountId, Transaction $transaction): Transaction | Collection

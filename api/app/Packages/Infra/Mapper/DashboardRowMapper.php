@@ -9,8 +9,9 @@ class DashboardRowMapper
 {
      public static function objectToExpenseCategory(object $expenseCategory): ExpenseCategory {
           return new ExpenseCategory(
+              $expenseCategory->id,
               $expenseCategory->description,
-              $expenseCategory->amount / 100
+       $expenseCategory->amount / 100
           );
      }
 

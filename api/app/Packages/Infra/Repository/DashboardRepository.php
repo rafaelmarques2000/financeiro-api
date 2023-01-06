@@ -12,6 +12,7 @@ class DashboardRepository implements DashboardRepositoryInterface
 {
     public const SELECT_EXPENSE_PER_CATEGORY = "
         SELECT
+            tc.id,
             tc.description,
             sum(t.amount) as amount
             FROM transaction t
@@ -22,7 +23,7 @@ class DashboardRepository implements DashboardRepositoryInterface
                 join users u on ua.user_id = u.id
                 where tt.slug_name = 'despesa' and t.deleted_at is null
                   and t.date between ? AND ? and u.id  = ?
-            group by tc.description
+            group by tc.description,tc.id
             order by amount DESC
     ";
 

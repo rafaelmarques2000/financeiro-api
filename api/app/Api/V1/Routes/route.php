@@ -32,6 +32,9 @@ Route::post('/check-token', [AuthController::class, 'checkJWTToken']);
         'users.accounts' => AccountController::class,
         'users.accounts.transactions' => TransactionController::class,
     ]);
+
+    Route::get("/users/{user}/transactions/{categoryId}", [TransactionController::class, 'listByCategory']);
+
     Route::resource('account-types', AccountTypeController::class)->only([
         'index',
     ]);

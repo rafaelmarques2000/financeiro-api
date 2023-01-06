@@ -22,6 +22,13 @@ class TransactionResponse
         ];
     }
 
+    public static function parseTransactionWithoutPaginationList(Collection $transactions): array
+    {
+        return $transactions->map(function (Transaction $transaction) {
+             return self::parseTransaction($transaction);
+        })->toArray();
+    }
+
     public static function parseTransactionInstallments(Collection $transactionList): array
     {
         return $transactionList->map(function (Transaction $transaction) {

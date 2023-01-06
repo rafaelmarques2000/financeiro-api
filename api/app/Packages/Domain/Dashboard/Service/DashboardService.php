@@ -27,6 +27,7 @@ class DashboardService implements DashboardServiceInterface
         return $expenses->map(function (ExpenseCategory $expenseCategory) use($totalExpenses){
              $percentage = ($expenseCategory->getAmount() / $totalExpenses) * 100;
              return new ExpenseCategory(
+                 $expenseCategory->getId(),
                  $expenseCategory->getDescription(),
                  $expenseCategory->getAmount(),
                  $percentage

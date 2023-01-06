@@ -10,6 +10,7 @@ use App\Api\V1\Utils\HttpStatus;
 use App\Http\Controllers\Controller;
 use App\Packages\Domain\General\Exceptions\NotFoundException;
 use App\Packages\Domain\Transaction\Model\Transaction;
+use App\Packages\Domain\Transaction\Model\TransactionCriteria;
 use App\Packages\Domain\Transaction\Model\TransactionSearch;
 use App\Packages\Domain\Transaction\Service\TransactionServiceInterface;
 use Exception;
@@ -46,6 +47,23 @@ class TransactionController extends Controller
                 HttpStatus::INTERNAL_SERVER_ERROR->value
             );
         }
+    }
+
+    public function listByCategory(Request $request, string $userId, string $categoryId) {
+         try{
+             $criteria = new TransactionCriteria(
+                 $request->query("initial_date"),
+                 $request->query("end_date"),
+                 $categoryId
+             );
+             return response()->json(TransactionResponse::parseTransactionWithoutPaginationList(
+                 $this->transactionService->findByCriteria($userId, $criteria)));
+         }catch (Exception $exception) {
+             return response()->json(
+                 ErrorResponse::parseError($exception->getMessage()),
+                 HttpStatus::INTERNAL_SERVER_ERROR->value
+             );
+         }
     }
 
     public function show(Request $request, string $userId, string $accountId, string $transactionId): JsonResponse

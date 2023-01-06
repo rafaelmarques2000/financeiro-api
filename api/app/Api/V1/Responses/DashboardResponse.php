@@ -10,6 +10,7 @@ class DashboardResponse
 {
       public static function parseExpensePerCategory(Collection $expenseCategories): array {
         return $expenseCategories->map(fn(ExpenseCategory $expenseCategory) => [
+            'id' => $expenseCategory->getId(),
             'description' => $expenseCategory->getDescription(),
             'amount' => $expenseCategory->getAmount(),
             'percentage' => $expenseCategory->getPercentage()
